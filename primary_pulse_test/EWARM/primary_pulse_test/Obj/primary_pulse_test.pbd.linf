@@ -1,5 +1,8 @@
 ﻿C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\primary_pulse_test.pbd
 C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\main.pbi
+C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal_msp.pbi
+C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_it.pbi
+C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\system_stm32f3xx.pbi
 C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal.pbi
 C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal_cortex.pbi
 C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal_dma.pbi
@@ -8,7 +11,6 @@ C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_puls
 C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal_gpio.pbi
 C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal_i2c.pbi
 C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal_i2c_ex.pbi
-C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal_msp.pbi
 C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal_pwr.pbi
 C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal_pwr_ex.pbi
 C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal_rcc.pbi
@@ -17,5 +19,3 @@ C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_puls
 C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal_tim_ex.pbi
 C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal_uart.pbi
 C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal_uart_ex.pbi
-C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_it.pbi
-C:\Users\Francis Chen\Desktop\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\system_stm32f3xx.pbi

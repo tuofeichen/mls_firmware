@@ -3,13 +3,13 @@
     <StLinkDriver>
         <stlinkserialNo>87150736</stlinkserialNo>
         <stlinkfoundProbes />
-        <stlinkResetStyle>0</stlinkResetStyle>
-        <stlinkResetStrategy>1</stlinkResetStrategy>
         <CStepIntDis>_ 0</CStepIntDis>
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
+        <stlinkResetStyle>0</stlinkResetStyle>
+        <stlinkResetStrategy>1</stlinkResetStrategy>
     </StLinkDriver>
     <DebugChecksum>
-        <Checksum>3713681593</Checksum>
+        <Checksum>4196469051</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -99,6 +99,12 @@
         <ShowTimeSum>1</ShowTimeSum>
         <SumSortOrder>0</SumSortOrder>
     </EventLog>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints2>
+        <Count>0</Count>
+    </Breakpoints2>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -108,6 +114,16 @@
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
     </TermIOLog>
+    <Aliases>
+        <A0>_ "C:\Users\Sean Metzger\Documents\GitHub\multi-level-solar-sean\software\primary_pulse_test\Drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal.c" ""</A0>
+        <A1>_ "C:\Users\Sean Metzger\Documents\GitHub\multi-level-solar-sean\software\primary_pulse_test\Drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_dma.c" "C:\Users\User\Desktop\Multi_Level Software\software\primary_pulse_test\drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_dma.c"</A1>
+        <A2>_ "C:\Users\Sean Metzger\Documents\GitHub\multi-level-solar-sean\software\primary_pulse_test\Drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_rcc.c" "C:\Users\User\Desktop\Multi_Level Software\software\primary_pulse_test\drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_rcc.c"</A2>
+        <A3>_ "C:\Users\Sean Metzger\Documents\GitHub\multi-level-solar-sean\software\primary_pulse_test\Drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_uart.c" "C:\Users\User\Desktop\Multi_Level Software\software\primary_pulse_test\drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_uart.c"</A3>
+        <A4>_ "C:\Users\Sean Metzger\Documents\GitHub\multi-level-solar-sean\software\primary_pulse_test\Src\main.c" "C:\Users\User\Desktop\Multi_Level Software\software\primary_pulse_test\Src\main.c"</A4>
+        <A5>_ "C:\Users\User\Desktop\Multi_Level Software\software\primary_pulse_test\Src\main.c" ""</A5>
+        <Count>6</Count>
+        <SuppressDialog>0</SuppressDialog>
+    </Aliases>
     <DriverProfiling>
         <Enabled>0</Enabled>
         <Mode>3</Mode>
@@ -121,20 +137,4 @@
     <CallStackStripe>
         <ShowTiming>1</ShowTiming>
     </CallStackStripe>
-    <DisassembleMode>
-        <mode>0</mode>
-    </DisassembleMode>
-    <Breakpoints2>
-        <Count>0</Count>
-    </Breakpoints2>
-    <Aliases>
-        <A0>_ "C:\Users\Sean Metzger\Documents\GitHub\multi-level-solar-sean\software\primary_pulse_test\Drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal.c" ""</A0>
-        <A1>_ "C:\Users\Sean Metzger\Documents\GitHub\multi-level-solar-sean\software\primary_pulse_test\Drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_dma.c" "C:\Users\User\Desktop\Multi_Level Software\software\primary_pulse_test\drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_dma.c"</A1>
-        <A2>_ "C:\Users\Sean Metzger\Documents\GitHub\multi-level-solar-sean\software\primary_pulse_test\Drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_rcc.c" "C:\Users\User\Desktop\Multi_Level Software\software\primary_pulse_test\drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_rcc.c"</A2>
-        <A3>_ "C:\Users\Sean Metzger\Documents\GitHub\multi-level-solar-sean\software\primary_pulse_test\Drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_uart.c" "C:\Users\User\Desktop\Multi_Level Software\software\primary_pulse_test\drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_uart.c"</A3>
-        <A4>_ "C:\Users\Sean Metzger\Documents\GitHub\multi-level-solar-sean\software\primary_pulse_test\Src\main.c" "C:\Users\User\Desktop\Multi_Level Software\software\primary_pulse_test\Src\main.c"</A4>
-        <A5>_ "C:\Users\User\Desktop\Multi_Level Software\software\primary_pulse_test\Src\main.c" ""</A5>
-        <Count>6</Count>
-        <SuppressDialog>0</SuppressDialog>
-    </Aliases>
 </settings>

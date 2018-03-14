@@ -4,7 +4,7 @@
   * Description        : Main program body
   ******************************************************************************
   *
-  * COPYRIGHT(c) 2017 STMicroelectronics
+  * COPYRIGHT(c) 2018 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -45,8 +45,11 @@ TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim6;
 
 UART_HandleTypeDef huart1;
+UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart1_tx;
+DMA_HandleTypeDef hdma_usart3_rx;
+DMA_HandleTypeDef hdma_usart3_tx;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -55,7 +58,6 @@ __IO char debug_rx_buffer[DEBUG_RX_BUF_SIZE];
 __IO char debug_tx_buffer[DEBUG_TX_BUF_SIZE];
 __IO uint16_t debug_tx_to_send = 0;
 __IO char *debug_tx_buf_start;
-
 __IO char msg_buffer[DEBUG_MAX_MSG_SIZE];
 
 __IO char *start_ptr;
@@ -67,8 +69,7 @@ __IO float duty = .5;
 __IO uint16_t pulse_length = 1;
 
 int td = 5;  // dead time for switch transitions
-int tcomm = 45;  // commutation period for leakage inductance
-int period = 360*5;
+int tcomm = 45;  // commutation PWM_PERIOD for leakage inductance
 int new_pwm = 0;
 uint32_t duty_ul;
 uint32_t duty_ll;
@@ -85,7 +86,8 @@ static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_USART1_UART_Init(void);
-static void MX_TIM6_Init(void);                                    
+static void MX_TIM6_Init(void);
+static void MX_USART3_UART_Init(void);                                    
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
                                 
 
@@ -259,7 +261,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
   sprintf(err_msg,"uart error %d\r\n",huart->ErrorCode);
   print_debug(err_msg);
 // reset hal dma   
-//  HAL_UART_Receive_DMA(&huart1, (uint8_t *)debug_rx_buffer, DEBUG_RX_BUF_SIZE);
+ // HAL_UART_Receive_DMA(&huart3, (uint8_t *)debug_rx_buffer, DEBUG_RX_BUF_SIZE);
  
 }
 
@@ -341,7 +343,7 @@ void stop_pwm() {
 
 void init_pwm(float pwm) {
   // Configure and start PWM
-  int ttot = period - 4 * td;
+  int ttot = PWM_PERIOD - 4 * td;
   int ton = (uint32_t)(ttot / 2.0 * duty + tcomm);
   int toff = (uint32_t)((ttot - 2*ton)/2.0);
   
@@ -356,7 +358,7 @@ void init_pwm(float pwm) {
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED1;
-  htim2.Init.Period = period/2;
+  htim2.Init.Period = PWM_PERIOD/2;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   
@@ -403,7 +405,7 @@ void set_pwm(float pwm) {
   duty = pwm;
   
   // Configure and start PWM
-  int ttot = period - 4 * td;
+  int ttot = PWM_PERIOD - 4 * td;
   int ton = (uint32_t)(ttot / 2.0 * duty + tcomm);
   int toff = (uint32_t)((ttot - 2*ton)/2.0);
   
@@ -462,6 +464,7 @@ int main(void)
   MX_TIM2_Init();
   MX_USART1_UART_Init();
   MX_TIM6_Init();
+  MX_USART3_UART_Init();
 
   /* USER CODE BEGIN 2 */
   // Set LEDs off
@@ -470,21 +473,25 @@ int main(void)
   
   // initialize pwm to 50% duty cycle (doesn't start pwm)
   init_pwm(.5);
-    
+
+  //  start timer2 interrupt for pwm value changes
+  HAL_TIM_Base_Start_IT(&htim2);
+  
   // Print boot message
   print_debug("Primary Board v1.0\n\r");
    // Start receiver
   HAL_UART_Receive_DMA(&huart1, (uint8_t *)debug_rx_buffer, DEBUG_RX_BUF_SIZE);
-  // print instructions
-  print_debug("To start pulsed test simply type <enter>\r\n");
-  print_debug("To configure pulse type new duty cycle in percent (i.e. 45) and then the pulse length in milliseconds when prompted\r\n");
-  print_debug("The default is a 50% duty cycle with a pulse length of 1ms\r\n");
-
-  /* USER CODE END 2 */
+  HAL_UART_Receive_DMA(&huart3, (uint8_t *)debug_rx_buffer, DEBUG_RX_BUF_SIZE); // put in the same buffer
+  
+//  print instructions
+//  print_debug("To start pulsed test simply type <enter>\r\n");
+//  print_debug("To configure pulse type new duty cycle in percent (i.e. 45) and then the pulse length in milliseconds when prompted\r\n");
+//  print_debug("The default is a 50% duty cycle with a pulse length of 1ms\r\n");
 
   set_pwm(0.8);
-  // start_pwm();
-
+  start_pwm();
+  
+  /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -517,9 +524,14 @@ int main(void)
       // print_debug("Shit got turned on/off\r\n");
       // stop_pwm();
     }
+    else
+    {
+       HAL_Delay(5);
+    }
 
     
-   // HAL_Delay(5);
+    
+   
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -566,8 +578,9 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_USART3;
   PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
+  PeriphClkInit.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
@@ -596,7 +609,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED1;
-  htim2.Init.Period = period/2;
+  htim2.Init.Period = PWM_PERIOD/2;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -648,7 +661,6 @@ static void MX_TIM2_Init(void)
   }
 
   HAL_TIM_MspPostInit(&htim2);
-  HAL_TIM_Base_Start_IT(&htim2);
 
 }
 
@@ -698,6 +710,27 @@ static void MX_USART1_UART_Init(void)
 
 }
 
+/* USART3 init function */
+static void MX_USART3_UART_Init(void)
+{
+
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 115200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+}
+
 /** 
   * Enable DMA controller clock
   */
@@ -707,6 +740,12 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA1_CLK_ENABLE();
 
   /* DMA interrupt init */
+  /* DMA1_Channel2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+  /* DMA1_Channel3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
   /* DMA1_Channel4_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
@@ -731,6 +770,7 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, USER2_Pin|USER1_Pin, GPIO_PIN_RESET);

@@ -69,7 +69,7 @@
 #define MONITOR_COUNT_MAX 100
 
 // PWM parameters
-#define PWM_PERIOD 360
+#define PWM_PERIOD 360*5
 /* USER CODE END Private defines */
 
 /**
