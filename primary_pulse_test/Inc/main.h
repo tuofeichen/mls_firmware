@@ -1,10 +1,16 @@
 /**
   ******************************************************************************
-  * File Name          : main.h
-  * Description        : This file contains the common defines of the application
+  * @file           : main.h
+  * @brief          : Header for main.c file.
+  *                   This file contains the common defines of the application.
   ******************************************************************************
+  ** This notice applies to any and all portions of this file
+  * that are not between comment pairs USER CODE BEGIN and
+  * USER CODE END. Other portions of this file, whether 
+  * inserted by the user or by software development tools
+  * are owned by their respective copyright owners.
   *
-  * COPYRIGHT(c) 2018 STMicroelectronics
+  * COPYRIGHT(c) 2019 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -30,10 +36,12 @@
   *
   ******************************************************************************
   */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MAIN_H
-#define __MAIN_H
-  /* Includes ------------------------------------------------------------------*/
+#ifndef __MAIN_H__
+#define __MAIN_H__
+
+/* Includes ------------------------------------------------------------------*/
 
 /* USER CODE BEGIN Includes */
 
@@ -58,9 +66,21 @@
 #define USER2_GPIO_Port GPIOA
 #define USER1_Pin GPIO_PIN_12
 #define USER1_GPIO_Port GPIOA
+#define OPTIC_TX_Pin GPIO_PIN_8
+#define OPTIC_TX_GPIO_Port GPIOB
+#define OPTIC_RX_Pin GPIO_PIN_9
+#define OPTIC_RX_GPIO_Port GPIOB
+
+/* ########################## Assert Selection ############################## */
+/**
+  * @brief Uncomment the line below to expanse the "assert_param" macro in the 
+  *        HAL drivers code
+  */
+/* #define USE_FULL_ASSERT    1U */
 
 /* USER CODE BEGIN Private defines */
 // Size of RX circular buffers
+#define OPTIC_RX_BUF_SIZE 100
 #define DEBUG_RX_BUF_SIZE 100
 #define DEBUG_TX_BUF_SIZE 250
 #define DEBUG_MAX_MSG_SIZE 250
@@ -69,16 +89,19 @@
 #define MONITOR_COUNT_MAX 100
 
 // PWM parameters
-#define PWM_PERIOD 360
+#define PWM_PERIOD 360*5
 /* USER CODE END Private defines */
 
-/**
-  * @}
-  */ 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+void _Error_Handler(char *, int);
 
-/**
-  * @}
-*/ 
+#define Error_Handler() _Error_Handler(__FILE__, __LINE__)
+#ifdef __cplusplus
+}
+#endif
 
-#endif /* __MAIN_H */
+#endif /* __MAIN_H__ */
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

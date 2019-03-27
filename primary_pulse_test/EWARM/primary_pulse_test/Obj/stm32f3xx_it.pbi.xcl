@@ -1,16 +1,16 @@
-"C:\Users\Francis Chen\Desktop\primary_pulse_test\Src\stm32f3xx_it.c"
+"D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\Src\stm32f3xx_it.c"
 -std=c11
 -ferror-limit=0
 -I
-C:\Users\Francis Chen\Desktop\primary_pulse_test\EWARM/../Inc
+D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\EWARM/../Inc
 -I
-C:\Users\Francis Chen\Desktop\primary_pulse_test\EWARM/../Drivers/STM32F3xx_HAL_Driver/Inc
+D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\EWARM/../Drivers/STM32F3xx_HAL_Driver/Inc
 -I
-C:\Users\Francis Chen\Desktop\primary_pulse_test\EWARM/../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy
+D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\EWARM/../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy
 -I
-C:\Users\Francis Chen\Desktop\primary_pulse_test\EWARM/../Drivers/CMSIS/Device/ST/STM32F3xx/Include
+D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\EWARM/../Drivers/CMSIS/Device/ST/STM32F3xx/Include
 -I
-C:\Users\Francis Chen\Desktop\primary_pulse_test\EWARM/../Drivers/CMSIS/Include
+D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\EWARM/../Drivers/CMSIS/Include
 -I
 E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\CMSIS\Include
 -I
@@ -18,15 +18,15 @@ E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc
 -I
 E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc\c
 -I
-C:\Users\Francis Chen\Desktop\primary_pulse_test\Inc
+D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\Inc
 -I
-C:\Users\Francis Chen\Desktop\primary_pulse_test\Drivers\STM32F3xx_HAL_Driver\Inc
+D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\Drivers\STM32F3xx_HAL_Driver\Inc
 -I
-C:\Users\Francis Chen\Desktop\primary_pulse_test\Drivers\STM32F3xx_HAL_Driver\Inc\Legacy
+D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\Drivers\STM32F3xx_HAL_Driver\Inc\Legacy
 -I
-C:\Users\Francis Chen\Desktop\primary_pulse_test\Drivers\CMSIS\Device\ST\STM32F3xx\Include
+D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\Drivers\CMSIS\Device\ST\STM32F3xx\Include
 -I
-C:\Users\Francis Chen\Desktop\primary_pulse_test\Drivers\CMSIS\Include
+D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\Drivers\CMSIS\Include
 -I
 E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\CMSIS\Include
 -D__CHAR_BITS__=8

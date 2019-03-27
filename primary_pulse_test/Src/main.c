@@ -1,10 +1,15 @@
 /**
   ******************************************************************************
-  * File Name          : main.c
-  * Description        : Main program body
+  * @file           : main.c
+  * @brief          : Main program body
   ******************************************************************************
+  ** This notice applies to any and all portions of this file
+  * that are not between comment pairs USER CODE BEGIN and
+  * USER CODE END. Other portions of this file, whether 
+  * inserted by the user or by software development tools
+  * are owned by their respective copyright owners.
   *
-  * COPYRIGHT(c) 2017 STMicroelectronics
+  * COPYRIGHT(c) 2019 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -45,22 +50,29 @@ TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim6;
 
 UART_HandleTypeDef huart1;
+UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart1_tx;
+DMA_HandleTypeDef hdma_usart3_rx;
+DMA_HandleTypeDef hdma_usart3_tx;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-// Debug UART variables
-__IO char debug_rx_buffer[DEBUG_RX_BUF_SIZE];
+// Optic UART RX Buffer
+__IO char optic_rx_buffer[OPTIC_RX_BUF_SIZE];
+__IO char *optic_start_ptr;
+__IO char *optic_end_ptr;
+__IO char *optic_curr_rx_ptr;
+
+// USB Uart TX Buffer
+
 __IO char debug_tx_buffer[DEBUG_TX_BUF_SIZE];
+__IO char debug_rx_buffer[DEBUG_RX_BUF_SIZE];
 __IO uint16_t debug_tx_to_send = 0;
 __IO char *debug_tx_buf_start;
-
 __IO char msg_buffer[DEBUG_MAX_MSG_SIZE];
 
-__IO char *start_ptr;
-__IO char *end_ptr;
-__IO char *curr_rx_ptr;
+
 
 // Pulse settings
 __IO float duty = .5;
@@ -80,12 +92,12 @@ uint32_t duty_lr;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-void Error_Handler(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_USART1_UART_Init(void);
-static void MX_TIM6_Init(void);                                    
+static void MX_TIM6_Init(void);
+static void MX_USART3_UART_Init(void);                                    
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
                                 
 
@@ -135,7 +147,7 @@ void print_debug(char *msg) {
 
 // method to check if there is available text
 bool serial_available() {
-  if (end_ptr != start_ptr)
+  if (optic_end_ptr != optic_start_ptr)
     return 1;
   
   return 0;
@@ -145,7 +157,7 @@ bool serial_available() {
 bool cmd_available() {
   // search from start of the end buffer and look for \r or \n to signal the end
   // of a message. returns 1 if there is a message. 0 otherwise
-  for (char *ptr = (char *)debug_rx_buffer; ptr < debug_rx_buffer + DEBUG_RX_BUF_SIZE; ptr++) {
+  for (char *ptr = (char *)optic_rx_buffer; ptr < optic_rx_buffer + OPTIC_RX_BUF_SIZE; ptr++) {
     if (*ptr == '\r' || *ptr == '\n') {
       return 1;
     }
@@ -158,11 +170,11 @@ bool cmd_available() {
 // method to read the most recent command. you must check if there is an available
 // command before calling the method. if there is no command the behavior is undefined.
 int get_cmd(char *parsed_msg) {
-  for(int k=0; k < DEBUG_RX_BUF_SIZE; k++) {
-    char *ptr = (char *)start_ptr + k;
+  for(int k=0; k < OPTIC_RX_BUF_SIZE; k++) {
+    char *ptr = (char *)optic_start_ptr + k;
     // check if wrapped around circular buffer
-    if (k + start_ptr >= debug_rx_buffer + DEBUG_RX_BUF_SIZE) {
-      ptr = k - DEBUG_RX_BUF_SIZE + (char *)start_ptr;
+    if (k + optic_start_ptr >= optic_rx_buffer + OPTIC_RX_BUF_SIZE) {
+      ptr = k - OPTIC_RX_BUF_SIZE + (char *)optic_start_ptr;
     }
     
     char temp = *ptr;
@@ -174,29 +186,29 @@ int get_cmd(char *parsed_msg) {
         // check if \r\n sent as terminating string
         char *next_ptr = ptr + 1;
         // wrap if necessary
-        if (next_ptr >= debug_rx_buffer + DEBUG_RX_BUF_SIZE) {
-          next_ptr = (char *)debug_rx_buffer;
+        if (next_ptr >= optic_rx_buffer + OPTIC_RX_BUF_SIZE) {
+          next_ptr = (char *)optic_rx_buffer;
         }
         
         // check if next_ptr is \n
         if (*next_ptr == '\n') {
-          // increment start_ptr to follow next_ptr
-          start_ptr = next_ptr + 1;
+          // increment optic_start_ptr to follow next_ptr
+          optic_start_ptr = next_ptr + 1;
           // replace \n with \0
           *next_ptr = '\0';
         } else {
-          start_ptr = ptr + 1;
+          optic_start_ptr = ptr + 1;
         }
       } else {
-        start_ptr = ptr + 1;
+        optic_start_ptr = ptr + 1;
       }
       
       // replace ptr with \0
       *ptr = '\0';
       
       // make sure start pointer doesn't overflow
-      if (start_ptr >= debug_rx_buffer + DEBUG_RX_BUF_SIZE)
-        start_ptr = debug_rx_buffer;
+      if (optic_start_ptr >= optic_rx_buffer + OPTIC_RX_BUF_SIZE)
+        optic_start_ptr = optic_rx_buffer;
       
       // terminate parsed command string with \0
       parsed_msg[k] = '\0';
@@ -219,12 +231,12 @@ int get_cmd(char *parsed_msg) {
 // before parsing the command or it may miss text
 void echo_text() {
   // make sure there is text to print
-  if (*curr_rx_ptr == '\0')
+  if (*optic_curr_rx_ptr == '\0')
     return;
   
-  int len = strlen((const char *)curr_rx_ptr);
-  print_debug((char *)curr_rx_ptr);
-  curr_rx_ptr += len;
+  int len = strlen((const char *)optic_curr_rx_ptr);
+  print_debug((char *)optic_curr_rx_ptr);
+  optic_curr_rx_ptr += len;
 }
 
 // handle end of TX transaction and see if there is still remaining data to be sent
@@ -259,7 +271,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
   sprintf(err_msg,"uart error %d\r\n",huart->ErrorCode);
   print_debug(err_msg);
 // reset hal dma   
-//  HAL_UART_Receive_DMA(&huart1, (uint8_t *)debug_rx_buffer, DEBUG_RX_BUF_SIZE);
+  HAL_UART_Receive_DMA(&huart3, (uint8_t *)optic_rx_buffer, OPTIC_RX_BUF_SIZE);
  
 }
 
@@ -268,15 +280,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   __HAL_UART_SEND_REQ(huart, UART_RXDATA_FLUSH_REQUEST); // Clear the buffer to prevent overrun
   // save received data in buffer
-  //store_text((char *)debug_rx_buffer);
+  //store_text((char *)optic_rx_buffer);
   // echo response
   /*
-  char echo_char = *curr_rx_ptr;
+  char echo_char = *optic_curr_rx_ptr;
   print_debug(&echo_char);
-  curr_rx_ptr++; 
-  // wrap curr_rx_ptr if necessary
-  if (curr_rx_ptr >= debug_rx_buffer + DEBUG_RX_BUF_SIZE)
-    curr_rx_ptr = debug_rx_buffer;
+  optic_curr_rx_ptr++; 
+  // wrap optic_curr_rx_ptr if necessary
+  if (optic_curr_rx_ptr >= optic_rx_buffer + OPTIC_RX_BUF_SIZE)
+    optic_curr_rx_ptr = optic_rx_buffer;
   */
 }
 
@@ -308,6 +320,7 @@ void start_pwm() {
     /* PWM generation Error */
     Error_Handler();
   }
+  HAL_TIM_Base_Start_IT(&htim2);
 }
 
 
@@ -391,6 +404,7 @@ void init_pwm(float pwm) {
   {
     Error_Handler();
   }
+  
 }
 
 void set_pwm(float pwm) {
@@ -438,14 +452,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 /* USER CODE END 0 */
 
+/**
+  * @brief  The application entry point.
+  *
+  * @retval None
+  */
 int main(void)
 {
-
   /* USER CODE BEGIN 1 */
   // initialize pointers
-  start_ptr = debug_rx_buffer;
-  end_ptr = debug_rx_buffer;
-  curr_rx_ptr = start_ptr;
+  optic_start_ptr = optic_rx_buffer;
+  optic_end_ptr = optic_rx_buffer;
+  optic_curr_rx_ptr = optic_start_ptr;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -453,8 +471,16 @@ int main(void)
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
   /* Configure the system clock */
   SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
@@ -462,7 +488,7 @@ int main(void)
   MX_TIM2_Init();
   MX_USART1_UART_Init();
   MX_TIM6_Init();
-
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   // Set LEDs off
   set_user1_led(false);
@@ -470,11 +496,14 @@ int main(void)
   
   // initialize pwm to 50% duty cycle (doesn't start pwm)
   init_pwm(.5);
-    
+  start_pwm();
+  
   // Print boot message
   print_debug("Primary Board v1.0\n\r");
-   // Start receiver
+   // Start Optical Receiver
+  HAL_UART_Receive_DMA(&huart3, (uint8_t *)optic_rx_buffer, OPTIC_RX_BUF_SIZE);
   HAL_UART_Receive_DMA(&huart1, (uint8_t *)debug_rx_buffer, DEBUG_RX_BUF_SIZE);
+ 
   // print instructions
   print_debug("To start pulsed test simply type <enter>\r\n");
   print_debug("To configure pulse type new duty cycle in percent (i.e. 45) and then the pulse length in milliseconds when prompted\r\n");
@@ -482,17 +511,13 @@ int main(void)
 
   /* USER CODE END 2 */
 
-  set_pwm(0.8);
-  // start_pwm();
-
-
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   int cmd_cnt = 0;
   while (1)
   {
     // check if there is a new command waiting. if so parse it
-    // echo_text();
+   // echo_text();
     
     if (cmd_available()) {
       int len = get_cmd((char *)msg_buffer);
@@ -503,9 +528,12 @@ int main(void)
         char duty_debug_msg [20];
 
         duty = 1.0*duty_int/1000.0;
-        sprintf(duty_debug_msg,"Set duty %5.3f\r\n",duty);
-        print_debug(duty_debug_msg);
         
+        if (((cmd_cnt++)%10000) == 0)
+        {
+           sprintf(duty_debug_msg,"Set duty %5.3f\r\n",duty);
+           print_debug(duty_debug_msg);
+        }
         set_pwm(duty);
         
       }
@@ -518,7 +546,7 @@ int main(void)
       // stop_pwm();
     }
 
-    
+//    print_debug("Test UART\r\n"); 
    // HAL_Delay(5);
   /* USER CODE END WHILE */
 
@@ -529,8 +557,10 @@ int main(void)
 
 }
 
-/** System Clock Configuration
-*/
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
 void SystemClock_Config(void)
 {
 
@@ -549,7 +579,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
     /**Initializes the CPU, AHB and APB busses clocks 
@@ -563,14 +593,15 @@ void SystemClock_Config(void)
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_USART3;
   PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
+  PeriphClkInit.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
     /**Configure the Systick interrupt time 
@@ -596,30 +627,30 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED1;
-  htim2.Init.Period = period/2;
+  htim2.Init.Period = PWM_PERIOD/2;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
   sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
   if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
   if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
@@ -628,27 +659,26 @@ static void MX_TIM2_Init(void)
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
   if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
   if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
   HAL_TIM_MspPostInit(&htim2);
-  HAL_TIM_Base_Start_IT(&htim2);
 
 }
 
@@ -665,14 +695,14 @@ static void MX_TIM6_Init(void)
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
   }
 
 }
@@ -682,7 +712,7 @@ static void MX_USART1_UART_Init(void)
 {
 
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 15200;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -693,7 +723,28 @@ static void MX_USART1_UART_Init(void)
   huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
   if (HAL_UART_Init(&huart1) != HAL_OK)
   {
-    Error_Handler();
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
+/* USART3 init function */
+static void MX_USART3_UART_Init(void)
+{
+
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 921600;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
   }
 
 }
@@ -707,6 +758,12 @@ static void MX_DMA_Init(void)
   __HAL_RCC_DMA1_CLK_ENABLE();
 
   /* DMA interrupt init */
+  /* DMA1_Channel2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+  /* DMA1_Channel3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
   /* DMA1_Channel4_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
@@ -731,6 +788,7 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, USER2_Pin|USER1_Pin, GPIO_PIN_RESET);
@@ -750,45 +808,43 @@ static void MX_GPIO_Init(void)
 
 /**
   * @brief  This function is executed in case of error occurrence.
-  * @param  None
+  * @param  file: The file name as string.
+  * @param  line: The line in file as a number.
   * @retval None
   */
-void Error_Handler(void)
+void _Error_Handler(char *file, int line)
 {
-  /* USER CODE BEGIN Error_Handler */
+  /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-  while(1) 
+  while(1)
   {
   }
-  /* USER CODE END Error_Handler */ 
+  /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef USE_FULL_ASSERT
-
+#ifdef  USE_FULL_ASSERT
 /**
-   * @brief Reports the name of the source file and the source line number
-   * where the assert_param error has occurred.
-   * @param file: pointer to the source file name
-   * @param line: assert_param error line source number
-   * @retval None
-   */
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
 void assert_failed(uint8_t* file, uint32_t line)
-{
+{ 
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
-
 }
-
-#endif
-
-/**
-  * @}
-  */ 
+#endif /* USE_FULL_ASSERT */
 
 /**
   * @}
-*/ 
+  */
+
+/**
+  * @}
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

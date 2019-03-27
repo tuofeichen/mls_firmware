@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Users\Francis Chen\Desktop\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.general.xcl" --backend -f "C:\Users\Francis Chen\Desktop\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.driver.xcl" 
+& "E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.general.xcl" --backend -f "D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.driver.xcl" 
 }
 else
 {
-& "E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Users\Francis Chen\Desktop\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\Francis Chen\Desktop\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.driver.xcl" 
+& "E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.general.xcl" --debug_file=$debugfile --backend -f "D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.driver.xcl" 
 }

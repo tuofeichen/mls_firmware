@@ -1,70 +1,44 @@
 ###############################################################################
 #
-# IAR ELF Linker V8.20.2.14835/W32 for ARM                11/Mar/2018  16:29:59
+# IAR ELF Linker V8.20.2.14835/W32 for ARM                26/Mar/2019  11:13:07
 # Copyright 2007-2017 IAR Systems AB.
 #
 #    Output file  =  
-#        C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Exe\secondary_scr_test.out
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Exe\secondary_scr_test.out
 #    Map file     =  
-#        C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\List\secondary_scr_test.map
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\List\secondary_scr_test.map
 #    Command line =  
-#        -f C:\Users\FRANCI~1\AppData\Local\Temp\EW7391.tmp ("C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\main.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\startup_stm32f303xc.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_adc.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_adc_ex.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_cortex.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_dma.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_flash.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_flash_ex.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_gpio.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_i2c.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_i2c_ex.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_msp.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_pwr.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_pwr_ex.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_rcc.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_rcc_ex.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_smbus.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_tim.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_tim_ex.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_uart.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_uart_ex.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_it.o"
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj\system_stm32f3xx.o"
+#        -f C:\Users\FRANCI~1\AppData\Local\Temp\EW23BF.tmp
+#        (D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\main.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\startup_stm32f303xc.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_adc.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_adc_ex.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_cortex.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_dma.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_flash.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_flash_ex.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_gpio.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_i2c.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_i2c_ex.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_msp.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_pwr.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_pwr_ex.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_rcc.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_rcc_ex.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_smbus.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_tim.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_tim_ex.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_uart.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_hal_uart_ex.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\stm32f3xx_it.o
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj\system_stm32f3xx.o
 #        --redirect _Printf=_PrintfFull --redirect _Scanf=_ScanfFull -o
-#        "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Exe\secondary_scr_test.out"
-#        --map "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\List\secondary_scr_test.map"
-#        --config "C:\Users\Francis
-#        Chen\Desktop\secondary_pulse_test\EWARM/stm32f303xc_flash.icf"
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Exe\secondary_scr_test.out
+#        --map
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\List\secondary_scr_test.map
+#        --config
+#        D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM/stm32f303xc_flash.icf
 #        --semihosting --entry __iar_program_start --vfe --text_out locale)
 #
 ###############################################################################
@@ -292,7 +266,7 @@ Copy/packbits (__iar_packbits_init_single3)
 
     Module                   ro code  ro data  rw data
     ------                   -------  -------  -------
-C:\Users\Francis Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj: [1]
+D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj: [1]
     main.o                     2 064       77    1 288
     startup_stm32f303xc.o        644
     stm32f3xx_hal.o              128                 4
@@ -653,7 +627,7 @@ strncpy                 0x08004035         Code  Gb  strncpy.o [5]
 uwTick                  0x2000058c    0x4  Data  Gb  stm32f3xx_hal.o [1]
 
 
-[1] = C:\Users\Francis Chen\Desktop\secondary_pulse_test\EWARM\secondary_scr_test\Obj
+[1] = D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\secondary_scr_test\Obj
 [2] = command line
 [3] = dl7M_tlf.a
 [4] = m7M_tls.a
