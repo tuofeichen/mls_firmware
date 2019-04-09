@@ -218,12 +218,14 @@ void reset_left_leg(){
 // pulse right leg of unfolding bridge (SCR 2 and SCR3)
 void set_right_leg() {
   HAL_GPIO_WritePin(SCRB_GPIO_Port, SCRB_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(SCRC_GPIO_Port, SCRC_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(SCRC1_GPIO_Port, SCRC1_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(SCRC2_GPIO_Port, SCRC2_Pin, GPIO_PIN_SET);
 }
 
 void reset_right_leg(){
   HAL_GPIO_WritePin(SCRB_GPIO_Port, SCRB_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(SCRC_GPIO_Port, SCRC_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(SCRC1_GPIO_Port, SCRC1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(SCRC2_GPIO_Port, SCRC2_Pin, GPIO_PIN_RESET);
 }
 
 /* --------------- Serial Interface -----------------------*/
@@ -536,13 +538,9 @@ int main(void)
     // check if there is a new command waiting. if so parse it
     echo_text();
     
-    //int start = HAL_GetTick();
-    while (tic++< 0x01ff);
+    while (tic++< 0x00ff);
     tic = 0;
-    //int duration  = HAL_GetTick()-start;
-    
-//    HAL_Delay(1);
-    
+
     //control law code. 
 //    dcv = *adc_outv; 
 //    v_des = 34.0*sine_array[loop_count];
@@ -565,41 +563,42 @@ int main(void)
 //        tosend = 990;
 //      }
 
-    if (monitor_count >= MONITOR_COUNT_MAX*50) {
-      char debug_msg[30];
-      sprintf(debug_msg, "Vout: %d Iout: %d\r\n", *adc_outv, *adc_outi);
-      print_debug(debug_msg);
-      monitor_count = 0;
-    } else {
-      monitor_count++;
-    }
+//    if (monitor_count >= MONITOR_COUNT_MAX*50) {
+//      char debug_msg[30];
+//      sprintf(debug_msg, "Vout: %d Iout: %d\r\n", *adc_outv, *adc_outi);
+//      print_debug(debug_msg);
+//      monitor_count = 0;
+//    } else {
+//      monitor_count++;
+//    }
     
     
-//    switch not at null but give some time for commutation
-//      if (loop_count == 0 && forward ==1)
-//      {           
-//            if (odd)
-//              set_right_leg();
-//            else
-//              set_left_leg();
-//      }
-//    
-//          
-//      if (loop_count == 20 && forward ==1)
-//      {           
-//            if ((odd++)%2)
-//              reset_right_leg();
-//            else
-//              reset_left_leg();
-//      }
+      if (loop_count == 0 && forward ==1)
+      {           
+            if (1)//(odd%2)
+              set_right_leg();
+            else
+              set_left_leg();
+      }
     
-     
+          
+      if (loop_count == 50 && forward ==1)
+      {           
+            if (1)//((odd++)%2)
+              reset_right_leg();
+            else
+              reset_left_leg();
+      }
+    
+      
+      if (loop_count < 40 && forward == 0)
+        tosend = 0; // make sure switching at zero
         
       if (loop_count > 80) {       
          loop_count = 80;  
          forward = 0;
-      } else if (loop_count < 1) { 
-         loop_count = 1;
+      } else if (loop_count < 0) {
+         loop_count = 0;
          forward = 1;
       } else if (forward) { 
         loop_count++;
@@ -607,10 +606,11 @@ int main(void)
         loop_count--;
       }
     
+
     // If speed is necessary, speed up the \r\n process. 
-    sprintf(monitor_buf, "%d\r\n", tosend);
+    sprintf(monitor_buf, "%d\n", tosend);
     print_optic(monitor_buf);
-    // print_debug(monitor_buf);
+     //print_debug(monitor_buf);
     
   /* USER CODE END WHILE */
 
@@ -872,7 +872,7 @@ static void MX_USART1_UART_Init(void)
 {
 
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 921600;
+  huart1.Init.BaudRate = 1000000;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -957,38 +957,41 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, SCRA_Pin|SCRB_Pin|SCRC_Pin|SCRD_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, SCRB_Pin|SCRD_Pin|SCRC2_Pin|SCRC1_Pin 
+                          |SCRA_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO3_Pin|GPIO4_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, USER2_Pin|USER1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, USER2_Pin|USER1_Pin|GPIO1_Pin|GPIO2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO4_Pin|GPIO3_Pin|GPIO2_Pin|GPIO2A12_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : SCRA_Pin SCRB_Pin SCRC_Pin SCRD_Pin */
-  GPIO_InitStruct.Pin = SCRA_Pin|SCRB_Pin|SCRC_Pin|SCRD_Pin;
+  /*Configure GPIO pins : SCRB_Pin SCRD_Pin SCRC2_Pin SCRC1_Pin 
+                           SCRA_Pin */
+  GPIO_InitStruct.Pin = SCRB_Pin|SCRD_Pin|SCRC2_Pin|SCRC1_Pin 
+                          |SCRA_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : GPIO3_Pin GPIO4_Pin */
-  GPIO_InitStruct.Pin = GPIO3_Pin|GPIO4_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : USER2_Pin USER1_Pin GPIO1_Pin GPIO2_Pin */
-  GPIO_InitStruct.Pin = USER2_Pin|USER1_Pin|GPIO1_Pin|GPIO2_Pin;
+  /*Configure GPIO pins : USER2_Pin USER1_Pin */
+  GPIO_InitStruct.Pin = USER2_Pin|USER1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : GPIO4_Pin GPIO3_Pin GPIO2_Pin GPIO2A12_Pin */
+  GPIO_InitStruct.Pin = GPIO4_Pin|GPIO3_Pin|GPIO2_Pin|GPIO2A12_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : TINT2_Pin TCRIT2_Pin */
   GPIO_InitStruct.Pin = TINT2_Pin|TCRIT2_Pin;

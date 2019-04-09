@@ -41,22 +41,28 @@
 
 /* Private define ------------------------------------------------------------*/
 
-#define SCRA_Pin GPIO_PIN_9
-#define SCRA_GPIO_Port GPIOE
-#define SCRB_Pin GPIO_PIN_11
+#define SCRB_Pin GPIO_PIN_9
 #define SCRB_GPIO_Port GPIOE
-#define SCRC_Pin GPIO_PIN_13
-#define SCRC_GPIO_Port GPIOE
-#define SCRD_Pin GPIO_PIN_14
+#define SCRD_Pin GPIO_PIN_11
 #define SCRD_GPIO_Port GPIOE
-#define GPIO3_Pin GPIO_PIN_10
-#define GPIO3_GPIO_Port GPIOB
-#define GPIO4_Pin GPIO_PIN_11
-#define GPIO4_GPIO_Port GPIOB
+#define SCRC2_Pin GPIO_PIN_12
+#define SCRC2_GPIO_Port GPIOE
+#define SCRC1_Pin GPIO_PIN_13
+#define SCRC1_GPIO_Port GPIOE
+#define SCRA_Pin GPIO_PIN_14
+#define SCRA_GPIO_Port GPIOE
 #define USER2_Pin GPIO_PIN_14
 #define USER2_GPIO_Port GPIOD
 #define USER1_Pin GPIO_PIN_15
 #define USER1_GPIO_Port GPIOD
+#define GPIO4_Pin GPIO_PIN_9
+#define GPIO4_GPIO_Port GPIOA
+#define GPIO3_Pin GPIO_PIN_10
+#define GPIO3_GPIO_Port GPIOA
+#define GPIO2_Pin GPIO_PIN_11
+#define GPIO2_GPIO_Port GPIOA
+#define GPIO2A12_Pin GPIO_PIN_12
+#define GPIO2A12_GPIO_Port GPIOA
 #define TINT2_Pin GPIO_PIN_11
 #define TINT2_GPIO_Port GPIOC
 #define TCRIT2_Pin GPIO_PIN_12
@@ -65,10 +71,6 @@
 #define TINT1_GPIO_Port GPIOD
 #define TCRIT1_Pin GPIO_PIN_1
 #define TCRIT1_GPIO_Port GPIOD
-#define GPIO1_Pin GPIO_PIN_3
-#define GPIO1_GPIO_Port GPIOD
-#define GPIO2_Pin GPIO_PIN_4
-#define GPIO2_GPIO_Port GPIOD
 
 /* USER CODE BEGIN Private defines */
 

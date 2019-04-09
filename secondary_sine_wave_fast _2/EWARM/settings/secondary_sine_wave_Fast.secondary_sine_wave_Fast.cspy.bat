@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\mls_firmware-master\mls_firmware-master\secondary_sine_wave_fast _2\EWARM\settings\secondary_sine_wave_Fast.secondary_sine_wave_Fast.general.xcl" --backend -f "D:\mls_firmware-master\mls_firmware-master\secondary_sine_wave_fast _2\EWARM\settings\secondary_sine_wave_Fast.secondary_sine_wave_Fast.driver.xcl" 
+"E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\mls_firmware\secondary_sine_wave_fast _2\EWARM\settings\secondary_sine_wave_Fast.secondary_sine_wave_Fast.general.xcl" --backend -f "D:\mls_firmware\secondary_sine_wave_fast _2\EWARM\settings\secondary_sine_wave_Fast.secondary_sine_wave_Fast.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\mls_firmware-master\mls_firmware-master\secondary_sine_wave_fast _2\EWARM\settings\secondary_sine_wave_Fast.secondary_sine_wave_Fast.general.xcl" "--debug_file=%~1" --backend -f "D:\mls_firmware-master\mls_firmware-master\secondary_sine_wave_fast _2\EWARM\settings\secondary_sine_wave_Fast.secondary_sine_wave_Fast.driver.xcl" 
+"E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\mls_firmware\secondary_sine_wave_fast _2\EWARM\settings\secondary_sine_wave_Fast.secondary_sine_wave_Fast.general.xcl" "--debug_file=%~1" --backend -f "D:\mls_firmware\secondary_sine_wave_fast _2\EWARM\settings\secondary_sine_wave_Fast.secondary_sine_wave_Fast.driver.xcl" 
 
 @echo off 
 :end

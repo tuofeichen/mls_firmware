@@ -80,7 +80,7 @@
 
 /* USER CODE BEGIN Private defines */
 // Size of RX circular buffers
-#define OPTIC_RX_BUF_SIZE 100
+#define OPTIC_RX_BUF_SIZE 200
 #define DEBUG_RX_BUF_SIZE 100
 #define DEBUG_TX_BUF_SIZE 250
 #define DEBUG_MAX_MSG_SIZE 250
@@ -88,8 +88,6 @@
 // How often to print monitoring statistics
 #define MONITOR_COUNT_MAX 100
 
-// PWM parameters
-#define PWM_PERIOD 360*5
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

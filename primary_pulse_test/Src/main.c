@@ -58,6 +58,9 @@ DMA_HandleTypeDef hdma_usart3_tx;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
+
+void stop_pwm(); 
+
 // Optic UART RX Buffer
 __IO char optic_rx_buffer[OPTIC_RX_BUF_SIZE];
 __IO char *optic_start_ptr;
@@ -76,11 +79,13 @@ __IO char msg_buffer[DEBUG_MAX_MSG_SIZE];
 
 // Pulse settings
 __IO float duty = .5;
+
 __IO uint16_t pulse_length = 1;
 
+int init = 0 ;
 int td = 5;  // dead time for switch transitions
 int tcomm = 45;  // commutation period for leakage inductance
-int period = 360*5;
+int period = PWM_PERIOD;
 int new_pwm = 0;
 uint32_t duty_ul;
 uint32_t duty_ll;
@@ -267,12 +272,20 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
-  char err_msg [20];
-  sprintf(err_msg,"uart error %d\r\n",huart->ErrorCode);
-  print_debug(err_msg);
-// reset hal dma   
+  
+  if (huart==&huart3)
+  {
+//  char err_msg [20];
+//  
+////  sprintf(err_msg,"uart error %d\r\n",huart->ErrorCode);
+////  print_debug(err_msg);
+
+  // reset hal dma   
   HAL_UART_Receive_DMA(&huart3, (uint8_t *)optic_rx_buffer, OPTIC_RX_BUF_SIZE);
- 
+  if (init==1)
+    stop_pwm(); 
+  
+  }
 }
 
 // handle end of recieve transaction and echo result
@@ -409,18 +422,21 @@ void init_pwm(float pwm) {
 
 void set_pwm(float pwm) {
   
-  if (pwm >= 1.0)
-    pwm = 0.9;
+  if (pwm >= 0.95)
+    pwm = 0.95;
   else if (pwm<=0.0)
-    pwm = 0.1;
+    pwm = 0.0;
   
   duty = pwm;
-  
+  int ton = 0;
   // Configure and start PWM
   int ttot = period - 4 * td;
-  int ton = (uint32_t)(ttot / 2.0 * duty + tcomm);
+  if (pwm > 0.0)
+    ton = (uint32_t)(ttot / 2.0 * duty + tcomm);
+  
   int toff = (uint32_t)((ttot - 2*ton)/2.0);
   
+ 
   // wait for last pwm value to be updated
   while (new_pwm);
   
@@ -457,7 +473,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   *
   * @retval None
   */
-int main(void)
+ int main(void)
 {
   /* USER CODE BEGIN 1 */
   // initialize pointers
@@ -504,11 +520,6 @@ int main(void)
   HAL_UART_Receive_DMA(&huart3, (uint8_t *)optic_rx_buffer, OPTIC_RX_BUF_SIZE);
   HAL_UART_Receive_DMA(&huart1, (uint8_t *)debug_rx_buffer, DEBUG_RX_BUF_SIZE);
  
-  // print instructions
-  print_debug("To start pulsed test simply type <enter>\r\n");
-  print_debug("To configure pulse type new duty cycle in percent (i.e. 45) and then the pulse length in milliseconds when prompted\r\n");
-  print_debug("The default is a 50% duty cycle with a pulse length of 1ms\r\n");
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -524,19 +535,19 @@ int main(void)
       
       // check command
       if (len != 0) { // if just a blank entering command -> start pulse
+        init = 1; 
         int  duty_int = atoi((char *)msg_buffer);
         char duty_debug_msg [20];
 
-        duty = 1.0*duty_int/1000.0;
+        duty = 1.0*duty_int/900.0;
         
-        if (((cmd_cnt++)%10000) == 0)
+        if (((cmd_cnt++)%100000) == 0)
         {
            sprintf(duty_debug_msg,"Set duty %5.3f\r\n",duty);
            print_debug(duty_debug_msg);
         }
-        set_pwm(duty);
-        
-      }
+       // set_pwm(duty); 
+      }   
       
       // start pulse
       // start pwm
@@ -733,7 +744,7 @@ static void MX_USART3_UART_Init(void)
 {
 
   huart3.Instance = USART3;
-  huart3.Init.BaudRate = 921600;
+  huart3.Init.BaudRate = 1000000;
   huart3.Init.WordLength = UART_WORDLENGTH_8B;
   huart3.Init.StopBits = UART_STOPBITS_1;
   huart3.Init.Parity = UART_PARITY_NONE;

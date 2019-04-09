@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.general.xcl" --backend -f "D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.driver.xcl" 
+"E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\mls_firmware\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.general.xcl" --backend -f "D:\mls_firmware\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.general.xcl" "--debug_file=%~1" --backend -f "D:\mls_firmware-master\mls_firmware-master\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.driver.xcl" 
+"E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\mls_firmware\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.general.xcl" "--debug_file=%~1" --backend -f "D:\mls_firmware\primary_pulse_test\EWARM\settings\primary_pulse_test.primary_pulse_test.driver.xcl" 
 
 @echo off 
 :end
