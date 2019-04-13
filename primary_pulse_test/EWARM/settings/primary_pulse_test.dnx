@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <settings>
     <StLinkDriver>
-        <stlinkserialNo>57013112</stlinkserialNo>
-        <stlinkfoundProbes>57013112:87150736:</stlinkfoundProbes>
         <CStepIntDis>_ 0</CStepIntDis>
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
         <stlinkResetStyle>0</stlinkResetStyle>
         <stlinkResetStrategy>1</stlinkResetStrategy>
+        <stlinkserialNo>57013112</stlinkserialNo>
+        <stlinkfoundProbes>57013112:87150736:</stlinkfoundProbes>
     </StLinkDriver>
     <DebugChecksum>
-        <Checksum>3050490696</Checksum>
+        <Checksum>1821148782</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -30,8 +30,8 @@
         <ByteLimit>50</ByteLimit>
     </Stack>
     <Disassembly>
-        <InstrCount>0</InstrCount>
         <MixedMode>1</MixedMode>
+        <InstrCount>0</InstrCount>
     </Disassembly>
     <CallStack>
         <ShowArgs>0</ShowArgs>
@@ -103,17 +103,14 @@
         <mode>0</mode>
     </DisassembleMode>
     <Breakpoints2>
-        <Count>0</Count>
+        <Bp0>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\drivers\STM32F3xx_HAL_Driver\Inc\stm32f3xx_hal_tim.h}.800.1" 0 0 1 "" 0 "" 0</Bp0>
+        <Count>1</Count>
     </Breakpoints2>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
         <Category>_ 0</Category>
     </LogFile>
-    <TermIOLog>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-    </TermIOLog>
     <Aliases>
         <A0>_ "C:\Users\Sean Metzger\Documents\GitHub\multi-level-solar-sean\software\primary_pulse_test\Drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal.c" ""</A0>
         <A1>_ "C:\Users\Sean Metzger\Documents\GitHub\multi-level-solar-sean\software\primary_pulse_test\Drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_dma.c" "C:\Users\User\Desktop\Multi_Level Software\software\primary_pulse_test\drivers\STM32F3xx_HAL_Driver\Src\stm32f3xx_hal_dma.c"</A1>
@@ -137,4 +134,8 @@
     <CallStackStripe>
         <ShowTiming>1</ShowTiming>
     </CallStackStripe>
+    <TermIOLog>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
 </settings>

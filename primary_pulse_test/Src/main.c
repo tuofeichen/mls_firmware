@@ -84,7 +84,7 @@ __IO uint16_t pulse_length = 1;
 
 int init = 0 ;
 int td = 5;  // dead time for switch transitions
-int tcomm = 45;  // commutation period for leakage inductance
+int tcomm = 10;  // commutation period for leakage inductance
 int period = PWM_PERIOD;
 int new_pwm = 0;
 uint32_t duty_ul;
@@ -276,14 +276,13 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
   if (huart==&huart3)
   {
 //  char err_msg [20];
-//  
 ////  sprintf(err_msg,"uart error %d\r\n",huart->ErrorCode);
 ////  print_debug(err_msg);
-
   // reset hal dma   
   HAL_UART_Receive_DMA(&huart3, (uint8_t *)optic_rx_buffer, OPTIC_RX_BUF_SIZE);
-  if (init==1)
-    stop_pwm(); 
+  
+  //if (init==1)
+    //stop_pwm(); 
   
   }
 }
@@ -333,7 +332,7 @@ void start_pwm() {
     /* PWM generation Error */
     Error_Handler();
   }
-  HAL_TIM_Base_Start_IT(&htim2);
+  //HAL_TIM_Base_Start_IT(&htim2);
 }
 
 
@@ -368,7 +367,7 @@ void stop_pwm() {
 void init_pwm(float pwm) {
   // Configure and start PWM
   int ttot = period - 4 * td;
-  int ton = (uint32_t)(ttot / 2.0 * duty + tcomm);
+  int ton = (uint32_t)(ttot / 2.0 * pwm + tcomm);
   int toff = (uint32_t)((ttot - 2*ton)/2.0);
   
   duty_ul = (uint32_t)(ton/2.0) + td;
@@ -438,19 +437,25 @@ void set_pwm(float pwm) {
   
  
   // wait for last pwm value to be updated
-  while (new_pwm);
+//  while(new_pwm);
   
   duty_ul = (uint32_t)(ton/2.0) + td;
   duty_ll = (uint32_t)(ton/2.0);
   duty_ur = (uint32_t)(ton/2.0 + toff) + td; 
   duty_lr = (uint32_t)(ton/2.0 + toff) + 2*td;
-  
+
+  htim2.Instance->CCR1 = duty_lr;
+  htim2.Instance->CCR2 = duty_ul;
+  htim2.Instance->CCR3 = duty_ll;
+  htim2.Instance->CCR4 = duty_ur;
   // signal new pwm values are present
   new_pwm = 1;
 }
 
 // Interrupt handler to change pwm values on timer reset and handle ending pulse
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+  
+
   // change PWM values
   if (htim->Instance == htim2.Instance) {
     if (new_pwm) {
@@ -473,7 +478,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   *
   * @retval None
   */
- int main(void)
+int main(void)
 {
   /* USER CODE BEGIN 1 */
   // initialize pointers
@@ -495,6 +500,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+  DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk; // [user] enable DWT for timing
 
   /* USER CODE END SysInit */
 
@@ -511,7 +517,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   set_user2_led(false);
   
   // initialize pwm to 50% duty cycle (doesn't start pwm)
-  init_pwm(.5);
+  init_pwm(.8);
   start_pwm();
   
   // Print boot message
@@ -519,34 +525,36 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
    // Start Optical Receiver
   HAL_UART_Receive_DMA(&huart3, (uint8_t *)optic_rx_buffer, OPTIC_RX_BUF_SIZE);
   HAL_UART_Receive_DMA(&huart1, (uint8_t *)debug_rx_buffer, DEBUG_RX_BUF_SIZE);
- 
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   int cmd_cnt = 0;
+
   while (1)
   {
     // check if there is a new command waiting. if so parse it
    // echo_text();
     
     if (cmd_available()) {
+      
       int len = get_cmd((char *)msg_buffer);
       
       // check command
       if (len != 0) { // if just a blank entering command -> start pulse
         init = 1; 
-        int  duty_int = atoi((char *)msg_buffer);
-        char duty_debug_msg [20];
-
-        duty = 1.0*duty_int/900.0;
+        int  duty_int = atoi((char *)msg_buffer); 
+        duty = 1.0*duty_int/1000.0;
         
-        if (((cmd_cnt++)%100000) == 0)
-        {
-           sprintf(duty_debug_msg,"Set duty %5.3f\r\n",duty);
-           print_debug(duty_debug_msg);
-        }
-       // set_pwm(duty); 
+//        char duty_debug_msg [20]; 
+//        if (((cmd_cnt++)%100000) == 0)
+//        {
+//           sprintf(duty_debug_msg,"Set duty %5.3f\r\n",duty);
+//           print_debug(duty_debug_msg);
+//        }
+        
+        set_pwm(duty); 
       }   
       
       // start pulse
@@ -640,7 +648,7 @@ static void MX_TIM2_Init(void)
   htim2.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED1;
   htim2.Init.Period = PWM_PERIOD/2;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);

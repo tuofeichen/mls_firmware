@@ -538,7 +538,7 @@ int main(void)
     // check if there is a new command waiting. if so parse it
     echo_text();
     
-    while (tic++< 0x00ff);
+    while (tic++< 0x008f);
     tic = 0;
 
     //control law code. 
@@ -575,7 +575,7 @@ int main(void)
     
       if (loop_count == 0 && forward ==1)
       {           
-            if (1)//(odd%2)
+            if (odd%2)
               set_right_leg();
             else
               set_left_leg();
@@ -584,16 +584,16 @@ int main(void)
           
       if (loop_count == 50 && forward ==1)
       {           
-            if (1)//((odd++)%2)
+            if ((odd++)%2)
               reset_right_leg();
             else
               reset_left_leg();
       }
     
       
-      if (loop_count < 40 && forward == 0)
+      if (loop_count < 20 && forward == 0)
         tosend = 0; // make sure switching at zero
-        
+//        
       if (loop_count > 80) {       
          loop_count = 80;  
          forward = 0;
