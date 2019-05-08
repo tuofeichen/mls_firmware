@@ -167,7 +167,11 @@ float sine_array[] = {0.00000, 0.01892, 0.03784, 0.05675 ,0.07563 ,0.09449,0.113
 ,0.99928};
 float R = 1.163; // These values were made using the matlab code in the system files. 
 float P = .0001996;
-
+// look up table related value 
+bool forward = 1;
+int loop_count = 0;
+uint32_t odd = 0;
+  
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -478,6 +482,7 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   // Set LEDs on
+  HAL_TIM_Base_Start_IT(&htim3); // enable timer 3 interrupt  
   set_user1_led(true);
   set_user2_led(false);
     
@@ -518,7 +523,6 @@ int main(void)
   float err = 0;
   float err_old = 0;
   float der = 0;
-  int loop_count = 0;
   float d = 0;
   float d_des = 0;
   float tc  = 1;
@@ -526,20 +530,12 @@ int main(void)
   float r = 1.163/34.0;
   float div_per_v = 6.5;
   float v_des = 0;
-  int tosend = 0;
-  int test = 0;
-  bool forward = 1;
-  
-  uint32_t tic = 0;
-  uint32_t odd = 0;
+  reset_left_leg(); // make sure gate is off
+  reset_right_leg();
   
   while (1)
   {
     // check if there is a new command waiting. if so parse it
-    echo_text();
-    
-    while (tic++< 0x008f);
-    tic = 0;
 
     //control law code. 
 //    dcv = *adc_outv; 
@@ -551,8 +547,7 @@ int main(void)
 //    err_old = err; 
 //    d = err*p + der*r + d_des; 
      
-      d = 900*sine_array[loop_count]; // TODO: change to control law. 
-      tosend = (int) d;
+
       
 //      if (tosend < 10) { 
 //        tosend = 10; 
@@ -572,44 +567,7 @@ int main(void)
 //      monitor_count++;
 //    }
     
-    
-      if (loop_count == 0 && forward ==1)
-      {           
-            if (odd%2)
-              set_right_leg();
-            else
-              set_left_leg();
-      }
-    
-          
-      if (loop_count == 50 && forward ==1)
-      {           
-            if ((odd++)%2)
-              reset_right_leg();
-            else
-              reset_left_leg();
-      }
-    
       
-      if (loop_count < 20 && forward == 0)
-        tosend = 0; // make sure switching at zero
-//        
-      if (loop_count > 80) {       
-         loop_count = 80;  
-         forward = 0;
-      } else if (loop_count < 0) {
-         loop_count = 0;
-         forward = 1;
-      } else if (forward) { 
-        loop_count++;
-      } else { 
-        loop_count--;
-      }
-    
-
-    // If speed is necessary, speed up the \r\n process. 
-    sprintf(monitor_buf, "%d\n", tosend);
-    print_optic(monitor_buf);
      //print_debug(monitor_buf);
     
   /* USER CODE END WHILE */
@@ -1008,7 +966,52 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) { 
 
+  if (htim->Instance == htim3.Instance) {
+     float d = 900*sine_array[loop_count]; // TODO: change to control law. 
+     int tosend = (int) d;  
+     char monitor_buf[25];
+  
+                if (loop_count == 0 && forward ==1)
+                {           
+                      if (0)//(odd%2)
+                        set_right_leg();
+                      else
+                        set_left_leg();
+                }
+              
+                    
+                if (loop_count == 20 && forward ==1)
+                {           
+                      if (0)//((odd++)%2)
+                        reset_right_leg();
+                      else
+                        reset_left_leg();
+                }
+              
+      
+      if (loop_count < 30 && forward == 0)
+        tosend = 0; // make sure switching at zero
+//        
+      if (loop_count > 80) {       
+         loop_count = 80;  
+         forward = 0;
+      } else if (loop_count < 0) {
+         loop_count = 0;
+         forward = 1;
+      } else if (forward) { 
+        loop_count++;
+      } else { 
+        loop_count--;
+      }
+    
+
+    // If speed is necessary, speed up the \r\n process. 
+    sprintf(monitor_buf, "%d\n", tosend);
+    print_optic(monitor_buf);
+  }
+}
 /* USER CODE END 4 */
 
 /**

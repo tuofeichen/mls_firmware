@@ -83,7 +83,7 @@ __IO float duty = .5;
 __IO uint16_t pulse_length = 1;
 
 int init = 0 ;
-int td = 5;  // dead time for switch transitions
+int td = 15;  // dead time for switch transitions
 int tcomm = 10;  // commutation period for leakage inductance
 int period = PWM_PERIOD;
 int new_pwm = 0;
@@ -421,7 +421,7 @@ void init_pwm(float pwm) {
 
 void set_pwm(float pwm) {
   
-  if (pwm >= 0.95)
+  if (pwm >= 1)
     pwm = 0.95;
   else if (pwm<=0.0)
     pwm = 0.0;
@@ -478,6 +478,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   *
   * @retval None
   */
+
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -517,7 +518,7 @@ int main(void)
   set_user2_led(false);
   
   // initialize pwm to 50% duty cycle (doesn't start pwm)
-  init_pwm(.8);
+  init_pwm(0.5);
   start_pwm();
   
   // Print boot message
@@ -554,7 +555,7 @@ int main(void)
 //           print_debug(duty_debug_msg);
 //        }
         
-        set_pwm(duty); 
+        //set_pwm(duty); 
       }   
       
       // start pulse

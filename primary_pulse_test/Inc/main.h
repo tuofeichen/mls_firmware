@@ -48,8 +48,7 @@
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/
-#define PWM_PERIOD 360
-
+#define PWM_PERIOD 3600*10*2/150
 #define LR_PWM_Pin GPIO_PIN_0
 #define LR_PWM_GPIO_Port GPIOA
 #define UL_PWM_Pin GPIO_PIN_1
