@@ -83,7 +83,7 @@ __IO float duty = .5;
 __IO uint16_t pulse_length = 1;
 
 int init = 0 ;
-int td = 15;  // dead time for switch transitions
+int td = 10;  // dead time for switch transitions
 int tcomm = 10;  // commutation period for leakage inductance
 int period = PWM_PERIOD;
 int new_pwm = 0;
@@ -275,9 +275,9 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
   
   if (huart==&huart2)
   {
-//  char err_msg [20];
-////  sprintf(err_msg,"uart error %d\r\n",huart->ErrorCode);
-////  print_debug(err_msg);
+  char err_msg [20];
+  sprintf(err_msg,"uart error %d\r\n",huart->ErrorCode);
+  print_debug(err_msg);
   // reset hal dma   
   HAL_UART_Receive_DMA(&huart2, (uint8_t *)optic_rx_buffer, OPTIC_RX_BUF_SIZE);
   
@@ -517,7 +517,7 @@ int main(void)
   set_user2_led(false);
   
   // initialize pwm to 50% duty cycle (doesn't start pwm)
-  init_pwm(0.5);
+  init_pwm(0.85);
   start_pwm();
   
   // Print boot message
@@ -543,18 +543,18 @@ int main(void)
       
       // check command
       if (len != 0) { // if just a blank entering command -> start pulse
-        init = 1; 
-        int  duty_int = atoi((char *)msg_buffer); 
-        duty = 1.0*duty_int/1000.0;
+          init = 1; 
+          int  duty_int = atoi((char *)msg_buffer); 
+          duty = 1.0*duty_int/1000.0;
+                
+//        char duty_debug_msg [20]; 
+//        if (((cmd_cnt++)%1000000) == 0)
+//        {
+//           sprintf(duty_debug_msg,"Set duty %5.3f\r\n",duty);
+//           print_debug(duty_debug_msg);
+//        }
         
-        char duty_debug_msg [20]; 
-        if (((cmd_cnt++)%10000) == 0)
-        {
-           sprintf(duty_debug_msg,"Set duty %5.3f\r\n",duty);
-           print_debug(duty_debug_msg);
-        }
-        
-        //set_pwm(duty); 
+        set_pwm(duty); 
       }   
       
       // start pulse
@@ -752,7 +752,7 @@ static void MX_USART2_UART_Init(void)
 {
 
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 1000000;
+  huart2.Init.BaudRate = 1200000;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;

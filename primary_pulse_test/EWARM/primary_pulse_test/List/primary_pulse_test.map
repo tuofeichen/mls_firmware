@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ELF Linker V8.20.2.14835/W32 for ARM                06/May/2019  14:50:36
+# IAR ELF Linker V8.20.2.14835/W32 for ARM                10/May/2019  11:56:28
 # Copyright 2007-2017 IAR Systems AB.
 #
 #    Output file  =  
@@ -8,7 +8,7 @@
 #    Map file     =  
 #        D:\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\List\primary_pulse_test.map
 #    Command line =  
-#        -f C:\Users\FRANCI~1\AppData\Local\Temp\EWFB2E.tmp
+#        -f C:\Users\FRANCI~1\AppData\Local\Temp\EWF71A.tmp
 #        (D:\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\main.o
 #        D:\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\startup_stm32f373xc.o
 #        D:\mls_firmware\primary_pulse_test\EWARM\primary_pulse_test\Obj\stm32f3xx_hal.o
@@ -407,7 +407,7 @@ HAL_UART_Transmit_DMA   0x08000209   0x76  Code  Gb  stm32f3xx_hal_uart.o [1]
 HAL_UART_TxCpltCallback
                         0x08000f49   0x6e  Code  Gb  main.o [1]
 HardFault_Handler       0x08002fa7    0x2  Code  Gb  stm32f3xx_it.o [1]
-MX_TIM2_Init            0x0800139b   0x9c  Code  Lc  main.o [1]
+MX_TIM2_Init            0x0800139b   0x9e  Code  Lc  main.o [1]
 MemManage_Handler       0x08002fa9    0x2  Code  Gb  stm32f3xx_it.o [1]
 NMI_Handler             0x08002fa5    0x2  Code  Gb  stm32f3xx_it.o [1]
 NVIC_SetPriority        0x0800197d   0x1e  Code  Lc  stm32f3xx_hal_cortex.o [1]
