@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ELF Linker V8.20.2.14835/W32 for ARM                23/May/2019  14:39:06
+# IAR ELF Linker V8.20.2.14835/W32 for ARM                23/May/2019  15:05:21
 # Copyright 2007-2017 IAR Systems AB.
 #
 #    Output file  =  
@@ -8,7 +8,7 @@
 #    Map file     =  
 #        D:\mls_firmware\primary_pulse_test_v2_board\EWARM\primary_pulse_test\List\primary_pulse_test.map
 #    Command line =  
-#        -f C:\Users\FRANCI~1\AppData\Local\Temp\EWE80A.tmp
+#        -f C:\Users\FRANCI~1\AppData\Local\Temp\EWF5A2.tmp
 #        (D:\mls_firmware\primary_pulse_test_v2_board\EWARM\primary_pulse_test\Obj\main.o
 #        D:\mls_firmware\primary_pulse_test_v2_board\EWARM\primary_pulse_test\Obj\startup_stm32f373xc.o
 #        D:\mls_firmware\primary_pulse_test_v2_board\EWARM\primary_pulse_test\Obj\stm32f3xx_hal.o
@@ -222,22 +222,22 @@ initialize by copy { rw };
     .data            inited   0x200000a0    0x48  xlocale_c.o [3]
                             - 0x200000e8    0xe8
 
-"P2", part 2 of 3:                         0x574
+"P2", part 2 of 3:                         0x4b8
   .bss               zero     0x200000e8   0x1a4  main.o [1]
   .bss               zero     0x2000028c   0x174  main.o [1]
-  .bss               zero     0x20000400   0x144  main.o [1]
-  .bss               zero     0x20000544    0x44  main.o [1]
-  .bss               zero     0x20000588    0x44  main.o [1]
-  .bss               zero     0x200005cc    0x44  main.o [1]
-  .bss               zero     0x20000610    0x44  main.o [1]
-  .bss               zero     0x20000654     0x4  stm32f3xx_hal.o [1]
-  .bss               zero     0x20000658     0x4  xfail_s.o [3]
-                            - 0x2000065c   0x574
+  .bss               zero     0x20000400    0x88  main.o [1]
+  .bss               zero     0x20000488    0x44  main.o [1]
+  .bss               zero     0x200004cc    0x44  main.o [1]
+  .bss               zero     0x20000510    0x44  main.o [1]
+  .bss               zero     0x20000554    0x44  main.o [1]
+  .bss               zero     0x20000598     0x4  stm32f3xx_hal.o [1]
+  .bss               zero     0x2000059c     0x4  xfail_s.o [3]
+                            - 0x200005a0   0x4b8
 
 "P2", part 3 of 3:                         0x400
-  CSTACK                      0x20000660   0x400  <Block>
-    CSTACK           uninit   0x20000660   0x400  <Block tail>
-                            - 0x20000a60   0x400
+  CSTACK                      0x200005a0   0x400  <Block>
+    CSTACK           uninit   0x200005a0   0x400  <Block tail>
+                            - 0x200009a0   0x400
 
 
 *******************************************************************************
@@ -247,8 +247,8 @@ initialize by copy { rw };
           Address     Size
           -------     ----
 Zero (__iar_zero_init3)
-    1 destination range, total size 0x574:
-          0x200000e8  0x574
+    1 destination range, total size 0x4b8:
+          0x200000e8  0x4b8
 
 Copy/packbits (__iar_packbits_init_single3)
     1 source range, total size 0x70 (48% of destination):
@@ -265,7 +265,7 @@ Copy/packbits (__iar_packbits_init_single3)
     Module                   ro code  ro data  rw data
     ------                   -------  -------  -------
 D:\mls_firmware\primary_pulse_test_v2_board\EWARM\primary_pulse_test\Obj: [1]
-    main.o                     1 916       48    1 488
+    main.o                     1 916       48    1 300
     startup_stm32f373xc.o        636
     stm32f3xx_hal.o              104                 4
     stm32f3xx_hal_cortex.o       230
@@ -281,7 +281,7 @@ D:\mls_firmware\primary_pulse_test_v2_board\EWARM\primary_pulse_test\Obj: [1]
     stm32f3xx_it.o               100
     system_stm32f3xx.o           124       10        4
     --------------------------------------------------
-    Total:                    10 068       58    1 496
+    Total:                    10 068       58    1 308
 
 command line: [2]
     --------------------------------------------------
@@ -350,7 +350,7 @@ shb_l.a: [6]
     Gaps                          40        2
     Linker created                         32    1 024
 ------------------------------------------------------
-    Grand Total:              18 730      160    2 652
+    Grand Total:              18 730      160    2 464
 
 
 *******************************************************************************
@@ -365,8 +365,8 @@ Entry                      Address   Size  Type      Object
 AHBPrescTable           0x080046b0   0x10  Data  Gb  system_stm32f3xx.o [1]
 APBPrescTable           0x08004868    0x8  Data  Gb  system_stm32f3xx.o [1]
 BusFault_Handler        0x080046c7    0x2  Code  Gb  stm32f3xx_it.o [1]
-CSTACK$$Base            0x20000660          --   Gb  - Linker created -
-CSTACK$$Limit           0x20000a60          --   Gb  - Linker created -
+CSTACK$$Base            0x200005a0          --   Gb  - Linker created -
+CSTACK$$Limit           0x200009a0          --   Gb  - Linker created -
 CacheMore               0x0800116d   0x24  Code  Lc  xlocale_c.o [3]
 DMA1_Channel4_IRQHandler
                         0x080046df    0x6  Code  Gb  stm32f3xx_it.o [1]
@@ -428,20 +428,20 @@ HAL_TIM_PeriodElapsedCallback
                         0x08002f51   0x24  Code  Gb  main.o [1]
 HAL_UARTEx_WakeupCallback
                         0x080032e1    0x2  Code  Wk  stm32f3xx_hal_uart_ex.o [1]
-HAL_UART_ErrorCallback  0x08002ceb   0x26  Code  Gb  main.o [1]
+HAL_UART_ErrorCallback  0x08002ce9   0x26  Code  Gb  main.o [1]
 HAL_UART_GetState       0x08002189    0xc  Code  Gb  stm32f3xx_hal_uart.o [1]
 HAL_UART_IRQHandler     0x0800204b  0x132  Code  Gb  stm32f3xx_hal_uart.o [1]
 HAL_UART_Init           0x08001ecd   0x30  Code  Gb  stm32f3xx_hal_uart.o [1]
 HAL_UART_MspInit        0x08002771  0x118  Code  Gb  stm32f3xx_hal_msp.o [1]
 HAL_UART_Receive_DMA    0x08001fc3   0x82  Code  Gb  stm32f3xx_hal_uart.o [1]
 HAL_UART_RxCpltCallback
-                        0x08002d11    0xc  Code  Gb  main.o [1]
+                        0x08002d0f    0xc  Code  Gb  main.o [1]
 HAL_UART_Transmit_DMA   0x08001f4d   0x76  Code  Gb  stm32f3xx_hal_uart.o [1]
 HAL_UART_TxCpltCallback
-                        0x08002c7d   0x6e  Code  Gb  main.o [1]
+                        0x08002c7b   0x6e  Code  Gb  main.o [1]
 HardFault_Handler       0x080046c3    0x2  Code  Gb  stm32f3xx_it.o [1]
 LoadInt                 0x08000377   0x7a  Code  Lc  xprintffull.o [3]
-MX_TIM2_Init            0x080031db   0x9e  Code  Lc  main.o [1]
+MX_TIM2_Init            0x080031db   0x9c  Code  Lc  main.o [1]
 MemManage_Handler       0x080046c5    0x2  Code  Gb  stm32f3xx_it.o [1]
 NMI_Handler             0x080046c1    0x2  Code  Gb  stm32f3xx_it.o [1]
 NVIC_SetPriority        0x080037d1   0x1e  Code  Lc  stm32f3xx_hal_cortex.o [1]
@@ -562,7 +562,7 @@ aPLLMULFactorTable      0x080037a0   0x10  Data  Gb  stm32f3xx_hal_rcc.o [1]
 aPredivFactorTable      0x080037b0   0x10  Data  Gb  stm32f3xx_hal_rcc.o [1]
 abort                   0x08001d37    0x6  Code  Gb  abort.o [3]
 atoi                    0x08004355    0x2  Code  Gb  iar_Stoulx.o [3]
-cmd_available           0x08002bf3   0x26  Code  Gb  main.o [1]
+cmd_available           0x08002bf3   0x24  Code  Gb  main.o [1]
 debug_rx_buffer         0x2000012c   0x64  Data  Gb  main.o [1]
 debug_tx_buf_start      0x20000300    0x4  Data  Gb  main.o [1]
 debug_tx_buffer         0x20000304   0xfc  Data  Gb  main.o [1]
@@ -574,11 +574,11 @@ duty_lr                 0x20000060    0x4  Data  Gb  main.o [1]
 duty_ul                 0x20000054    0x4  Data  Gb  main.o [1]
 duty_ur                 0x2000005c    0x4  Data  Gb  main.o [1]
 exit                    0x0800483b    0x4  Code  Gb  exit.o [3]
-get_cmd                 0x08002c19   0x64  Code  Gb  main.o [1]
-hdma_usart1_rx          0x20000544   0x44  Data  Gb  main.o [1]
-hdma_usart1_tx          0x20000588   0x44  Data  Gb  main.o [1]
-hdma_usart2_rx          0x200005cc   0x44  Data  Gb  main.o [1]
-hdma_usart2_tx          0x20000610   0x44  Data  Gb  main.o [1]
+get_cmd                 0x08002c17   0x64  Code  Gb  main.o [1]
+hdma_usart1_rx          0x20000488   0x44  Data  Gb  main.o [1]
+hdma_usart1_tx          0x200004cc   0x44  Data  Gb  main.o [1]
+hdma_usart2_rx          0x20000510   0x44  Data  Gb  main.o [1]
+hdma_usart2_tx          0x20000554   0x44  Data  Gb  main.o [1]
 htim2                   0x20000000   0x40  Data  Gb  main.o [1]
 htim6                   0x200000e8   0x40  Data  Gb  main.o [1]
 huart1                  0x20000290   0x70  Data  Gb  main.o [1]
@@ -596,7 +596,7 @@ ndigs                   0x08004388   0x28  Data  Lc  iar_Stoulx.o [3]
 new_pwm                 0x20000050    0x4  Data  Gb  main.o [1]
 optic_curr_rx_ptr       0x20000478    0x4  Data  Gb  main.o [1]
 optic_end_ptr           0x20000474    0x4  Data  Gb  main.o [1]
-optic_rx_buffer         0x2000047c   0xc8  Data  Gb  main.o [1]
+optic_rx_buffer         0x2000047c    0xc  Data  Gb  main.o [1]
 optic_start_ptr         0x20000470    0x4  Data  Gb  main.o [1]
 period                  0x2000004c    0x4  Data  Gb  main.o [1]
 print_debug             0x08002b87   0x6c  Code  Gb  main.o [1]
@@ -605,12 +605,12 @@ scalblnl                0x0800182d         Code  Gb  ldexp.o [4]
 scalbn                  0x0800182d         Code  Gb  ldexp.o [4]
 scalbnl                 0x0800182d         Code  Gb  ldexp.o [4]
 scale                   0x08000987   0x46  Code  Lc  xprintffull.o [3]
-sec_hand                0x20000658    0x4  Data  Lc  xfail_s.o [3]
+sec_hand                0x2000059c    0x4  Data  Lc  xfail_s.o [3]
 set_pwm                 0x08002e69   0xe0  Code  Gb  main.o [1]
 set_user1_led           0x08002b65    0xe  Code  Gb  main.o [1]
 set_user2_led           0x08002b73    0xc  Code  Gb  main.o [1]
 sprintf                 0x08003b1d   0x40  Code  Gb  sprintf.o [3]
-start_pwm               0x08002d1d   0x2c  Code  Gb  main.o [1]
+start_pwm               0x08002d1b   0x2c  Code  Gb  main.o [1]
 strchr                  0x080011e1         Code  Gb  strchr.o [5]
 strlen                  0x08001245         Code  Gb  strlen.o [5]
 strncat                 0x08003a85   0x28  Code  Gb  strncat.o [3]
@@ -618,7 +618,7 @@ strncpy                 0x08003aad         Code  Gb  strncpy.o [5]
 tcomm                   0x20000048    0x4  Data  Gb  main.o [1]
 td                      0x20000044    0x4  Data  Gb  main.o [1]
 tolower                 0x08004631   0x14  Code  Gb  tolower.o [3]
-uwTick                  0x20000654    0x4  Data  Gb  stm32f3xx_hal.o [1]
+uwTick                  0x20000598    0x4  Data  Gb  stm32f3xx_hal.o [1]
 
 
 [1] = D:\mls_firmware\primary_pulse_test_v2_board\EWARM\primary_pulse_test\Obj
@@ -630,7 +630,7 @@ uwTick                  0x20000654    0x4  Data  Gb  stm32f3xx_hal.o [1]
 
   18 730 bytes of readonly  code memory
      160 bytes of readonly  data memory
-   2 652 bytes of readwrite data memory
+   2 464 bytes of readwrite data memory
 
 Errors: none
 Warnings: none

@@ -48,7 +48,7 @@
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/
-#define PWM_PERIOD 3600*10*2/50
+#define PWM_PERIOD 3600*10*2/150
 
 #define LR_PWM_Pin GPIO_PIN_0
 #define LR_PWM_GPIO_Port GPIOA
@@ -80,7 +80,7 @@
 
 /* USER CODE BEGIN Private defines */
 // Size of RX circular buffers
-#define OPTIC_RX_BUF_SIZE 200
+#define OPTIC_RX_BUF_SIZE 10
 #define DEBUG_RX_BUF_SIZE 100
 #define DEBUG_TX_BUF_SIZE 250
 #define DEBUG_MAX_MSG_SIZE 250

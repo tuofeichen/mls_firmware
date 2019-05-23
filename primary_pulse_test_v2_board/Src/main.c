@@ -556,19 +556,9 @@ int main(void)
         
         set_pwm(duty); 
       }   
-      
-      // start pulse
-      // start pwm
-      // start_pwm();
-      // HAL_Delay(pulse_length);
-      // print_debug("Shit got turned on/off\r\n");
-      // stop_pwm();
     }
-
-//    print_debug("Test UART\r\n"); 
-   // HAL_Delay(5);
-  /* USER CODE END WHILE */
-
+ /* USER CODE END WHILE */
+    
   /* USER CODE BEGIN 3 */
 
   }
@@ -752,7 +742,7 @@ static void MX_USART2_UART_Init(void)
 {
 
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 1200000;
+  huart2.Init.BaudRate = 2200000;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
