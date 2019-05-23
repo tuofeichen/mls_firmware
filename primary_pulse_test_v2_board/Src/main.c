@@ -60,12 +60,13 @@ DMA_HandleTypeDef hdma_usart2_tx;
 /* Private variables ---------------------------------------------------------*/
 
 void stop_pwm(); 
+void set_pwm(float pwm);
 
 // Optic UART RX Buffer
-__IO char optic_rx_buffer[OPTIC_RX_BUF_SIZE];
-__IO char *optic_start_ptr;
-__IO char *optic_end_ptr;
-__IO char *optic_curr_rx_ptr;
+__IO uint8_t optic_rx_buffer[OPTIC_RX_BUF_SIZE];
+__IO uint8_t *optic_start_ptr;
+__IO uint8_t *optic_end_ptr;
+__IO uint8_t *optic_curr_rx_ptr;
 
 // USB Uart TX Buffer
 
@@ -83,6 +84,8 @@ __IO float duty = .5;
 __IO uint16_t pulse_length = 1;
 
 int init = 0 ;
+int cmd_cnt = 0; // refresh count for print to debug terminal
+  
 int td = 10;  // dead time for switch transitions
 int tcomm = 10;  // commutation period for leakage inductance
 int period = PWM_PERIOD;
@@ -162,7 +165,7 @@ bool serial_available() {
 bool cmd_available() {
   // search from start of the end buffer and look for \r or \n to signal the end
   // of a message. returns 1 if there is a message. 0 otherwise
-  for (char *ptr = (char *)optic_rx_buffer; ptr < optic_rx_buffer + OPTIC_RX_BUF_SIZE; ptr++) {
+  for (uint8_t *ptr = (uint8_t *)optic_rx_buffer; ptr < optic_rx_buffer + OPTIC_RX_BUF_SIZE; ptr++) {
     if (*ptr == '\r' || *ptr == '\n') {
       return 1;
     }
@@ -291,6 +294,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   __HAL_UART_SEND_REQ(huart, UART_RXDATA_FLUSH_REQUEST); // Clear the buffer to prevent overrun
+  
   // save received data in buffer
   //store_text((char *)optic_rx_buffer);
   // echo response
@@ -302,6 +306,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   if (optic_curr_rx_ptr >= optic_rx_buffer + OPTIC_RX_BUF_SIZE)
     optic_curr_rx_ptr = optic_rx_buffer;
   */
+  
+  // drastically simplify communications: directly apply the received PWM command 
+  set_pwm((float)optic_rx_buffer[0]/265.0);
 }
 
 
@@ -523,40 +530,40 @@ int main(void)
   // Print boot message
   print_debug("Primary Board v1.0\n\r");
    // Start Optical Receiver
-  HAL_UART_Receive_DMA(&huart2, (uint8_t *)optic_rx_buffer, OPTIC_RX_BUF_SIZE);
+  HAL_UART_Receive_DMA(&huart2, (uint8_t *)optic_rx_buffer, 1);//OPTIC_RX_BUF_SIZE);
   HAL_UART_Receive_DMA(&huart1, (uint8_t *)debug_rx_buffer, DEBUG_RX_BUF_SIZE);
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int cmd_cnt = 0;
+
 
   while (1)
   {
-    // check if there is a new command waiting. if so parse it
-   // echo_text();
     
-    if (cmd_available()) {
-      
-      int len = get_cmd((char *)msg_buffer);
-      
-      // check command
-      if (len != 0) { // if just a blank entering command -> start pulse
-          init = 1; 
-          int  duty_int = atoi((char *)msg_buffer); 
-          duty = 1.0*duty_int/1000.0;
-                
-//        char duty_debug_msg [20]; 
-//        if (((cmd_cnt++)%1000000) == 0)
-//        {
-//           sprintf(duty_debug_msg,"Set duty %5.3f\r\n",duty);
-//           print_debug(duty_debug_msg);
-//        }
-        
-        set_pwm(duty); 
-      }   
-    }
+    // check if there is a new command waiting. if so parse it
+   // echo_text();    
+//    if (cmd_available()) {
+//      
+//      int len = get_cmd((char *)msg_buffer);
+//      
+//      // check command
+//      if (len != 0) { // if just a blank entering command -> start pulse
+//          init = 1; 
+//          int  duty_int = atoi((char *)msg_buffer); 
+//          duty = 1.0*duty_int/1000.0;
+//                
+////        char duty_debug_msg [20]; 
+////        if (((cmd_cnt++)%1000000) == 0)
+////        {
+////           sprintf(duty_debug_msg,"Set duty %5.3f\r\n",duty);
+////           print_debug(duty_debug_msg);
+////        }
+//        
+//        set_pwm(duty); 
+//      }   
+//    }
  /* USER CODE END WHILE */
     
   /* USER CODE BEGIN 3 */

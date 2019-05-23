@@ -65,10 +65,11 @@ __IO uint16_t debug_tx_to_send = 0;
 __IO char *debug_tx_buf_start;
 
 
-__IO char optic_rx_buffer[DEBUG_RX_BUF_SIZE];
-__IO char optic_tx_buffer[DEBUG_TX_BUF_SIZE];
-__IO uint16_t optic_tx_to_send = 0;
-__IO char *optic_tx_buf_start;
+//  optical link buffers
+__IO uint8_t optic_rx_buffer[DEBUG_RX_BUF_SIZE];
+__IO uint8_t optic_tx_buffer[DEBUG_TX_BUF_SIZE];
+__IO uint8_t optic_tx_to_send = 0;
+__IO uint8_t *optic_tx_buf_start;
 
 __IO char msg_buffer[DEBUG_MAX_MSG_SIZE];
 
@@ -255,23 +256,24 @@ void print_debug(char *msg) {
 }
 
 // transmit through optical 
-void print_optic(char*msg){
+void print_optic(uint8_t msg){
   // check if TX is free
   uint8_t state = HAL_UART_GetState(&huart1);
   if (state == HAL_UART_STATE_BUSY_TX || state == HAL_UART_STATE_BUSY_TX_RX) {
     // append to TX buffer
-    strncat((char *)optic_tx_buffer, msg, DEBUG_TX_BUF_SIZE - strlen((char *)optic_tx_buffer));
+    // strncat(optic_tx_buffer, msg, DEBUG_TX_BUF_SIZE - strlen(optic_tx_buffer));
     // update to_send length
-    optic_tx_to_send = optic_tx_to_send + strlen(msg); 
-  } else {
-    strncpy((char *)optic_tx_buffer, msg, DEBUG_TX_BUF_SIZE);
-    optic_tx_to_send = 0;
-    uint16_t ntransfer = strlen((char *)optic_tx_buffer);
+    optic_tx_buffer[optic_tx_to_send] = msg; 
+    optic_tx_to_send++;
     
+  } else {
     // start TX event
     // set to_send to 0 and update start pointer
-    optic_tx_buf_start = optic_tx_buffer + ntransfer;
-    HAL_UART_Transmit_DMA(&huart1, (uint8_t *)optic_tx_buffer, ntransfer);
+    optic_tx_buf_start = optic_tx_buffer + optic_tx_to_send;
+    optic_tx_buffer[optic_tx_to_send] = msg;
+    
+    HAL_UART_Transmit_DMA(&huart1, (uint8_t*)optic_tx_buffer+optic_tx_to_send,1);
+    optic_tx_to_send = 0;
     
   }
 }
@@ -547,27 +549,6 @@ int main(void)
 //    err_old = err; 
 //    d = err*p + der*r + d_des; 
      
-
-      
-//      if (tosend < 10) { 
-//        tosend = 10; 
-//        //TODO: ADD PFM. 
-//      }
-//      
-//      if (tosend > 990) { 
-//        tosend = 990;
-//      }
-
-//    if (monitor_count >= MONITOR_COUNT_MAX*50) {
-//      char debug_msg[30];
-//      sprintf(debug_msg, "Vout: %d Iout: %d\r\n", *adc_outv, *adc_outi);
-//      print_debug(debug_msg);
-//      monitor_count = 0;
-//    } else {
-//      monitor_count++;
-//    }
-    
-      
      //print_debug(monitor_buf);
     
   /* USER CODE END WHILE */
@@ -969,13 +950,13 @@ static void MX_GPIO_Init(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) { 
 
   if (htim->Instance == htim3.Instance) {
-     float d = 900*sine_array[loop_count]; // TODO: change to control law. 
-     int tosend = (int) d;  
+     float d = 255*sine_array[loop_count]; // TODO: change to control law. 
+     int duty_cmd = (int) d;  
      char monitor_buf[25];
   
                 if (loop_count == 0 && forward ==1)
                 {           
-                      if (1)//(odd%2)
+                      if (odd%2)
                         set_right_leg();
                       else
                         set_left_leg();
@@ -984,7 +965,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
                     
                 if (loop_count == 20 && forward ==1)
                 {           
-                      if (1)//((odd++)%2)
+                      if ((odd++)%2)
                         reset_right_leg();
                       else
                         reset_left_leg();
@@ -992,7 +973,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
               
       
       if (loop_count < 30 && forward == 0)
-        tosend = 0; // make sure switching at zero
+        duty_cmd = 0; // make sure switching at zero
 //        
       if (loop_count > 80) {       
          loop_count = 80;  
@@ -1008,8 +989,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     
 
     // If speed is necessary, speed up the \r\n process. 
-    sprintf(monitor_buf, "%d\n", tosend);
-    print_optic(monitor_buf);
+//    sprintf(monitor_buf, "%d\n", duty_cmd);
+    print_optic(duty_cmd);
   }
 }
 /* USER CODE END 4 */
