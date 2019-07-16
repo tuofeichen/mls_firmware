@@ -910,7 +910,7 @@
             <IarPane-34102>
                 <expressions>
                     <item>MONITOR_COUNT_MAX</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

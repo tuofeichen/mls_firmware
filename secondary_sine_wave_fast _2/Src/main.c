@@ -272,7 +272,7 @@ void print_optic(uint8_t msg){
     optic_tx_buf_start = optic_tx_buffer + optic_tx_to_send;
     optic_tx_buffer[optic_tx_to_send] = msg;
     
-    HAL_UART_Transmit_DMA(&huart1, (uint8_t*)optic_tx_buffer+optic_tx_to_send,1);
+    HAL_UART_Transmit_DMA(&huart1, (uint8_t*)optic_tx_buffer+optic_tx_to_send,1); // only send most recent PWM command
     optic_tx_to_send = 0;
     
   }
@@ -518,7 +518,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int monitor_count = 0;
+  long int monitor_cnt = 0;
   char monitor_buf[25];
   int dcv = *adc_dcv; 
   float v_real = 0; 
@@ -539,8 +539,19 @@ int main(void)
   {
     // check if there is a new command waiting. if so parse it
 
+    
     //control law code. 
-//    dcv = *adc_outv; 
+      dcv = *adc_outv; 
+      if ((monitor_cnt%1000000) == 0)
+      {
+          sprintf(monitor_buf,"ADC Output is %d\n\r",dcv);
+          print_debug(monitor_buf);
+          monitor_cnt = 1; 
+      }     
+      else
+        monitor_cnt ++; 
+      
+  
 //    v_des = 34.0*sine_array[loop_count];
 //    d_des = v_des/34.0;
 //    v_real = dcv/div_per_v;
@@ -549,7 +560,6 @@ int main(void)
 //    err_old = err; 
 //    d = err*p + der*r + d_des; 
      
-     //print_debug(monitor_buf);
     
   /* USER CODE END WHILE */
 
@@ -956,7 +966,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   
                 if (loop_count == 0 && forward ==1)
                 {           
-                      if (odd%2)
+                      if (1)//(odd%2)
                         set_right_leg();
                       else
                         set_left_leg();
@@ -965,14 +975,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
                     
                 if (loop_count == 20 && forward ==1)
                 {           
-                      if ((odd++)%2)
+                      if (1)//((odd++)%2)
                         reset_right_leg();
                       else
                         reset_left_leg();
                 }
               
       
-      if (loop_count < 30 && forward == 0)
+      if (loop_count < 20 && forward == 0)
         duty_cmd = 0; // make sure switching at zero
 //        
       if (loop_count > 80) {       

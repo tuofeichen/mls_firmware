@@ -86,7 +86,7 @@ __IO uint16_t pulse_length = 1;
 int init = 0 ;
 int cmd_cnt = 0; // refresh count for print to debug terminal
   
-int td = 10;  // dead time for switch transitions
+int td =  10;  // dead time for switch transitions
 int tcomm = 10;  // commutation period for leakage inductance
 int period = PWM_PERIOD;
 int new_pwm = 0;
@@ -296,7 +296,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   __HAL_UART_SEND_REQ(huart, UART_RXDATA_FLUSH_REQUEST); // Clear the buffer to prevent overrun
   
   // save received data in buffer
-  //store_text((char *)optic_rx_buffer);
+  // store_text((char *)optic_rx_buffer);
   // echo response
   /*
   char echo_char = *optic_curr_rx_ptr;
@@ -308,7 +308,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   */
   
   // drastically simplify communications: directly apply the received PWM command 
-  set_pwm((float)optic_rx_buffer[0]/265.0);
+  //set_pwm((float)optic_rx_buffer[0]/275.0);
+  
 }
 
 
@@ -377,6 +378,7 @@ void init_pwm(float pwm) {
   int ton = (uint32_t)(ttot / 2.0 * pwm + tcomm);
   int toff = (uint32_t)((ttot - 2*ton)/2.0);
   
+  
   duty_ul = (uint32_t)(ton/2.0) + td;
   duty_ll = (uint32_t)(ton/2.0);
   duty_ur = (uint32_t)(ton/2.0 + toff) + td; 
@@ -428,10 +430,14 @@ void init_pwm(float pwm) {
 
 void set_pwm(float pwm) {
   
-  if (pwm >= 1)
+  if (pwm >= 1.0)
+  {
     pwm = 0.95;
+  }
   else if (pwm<=0.0)
+  {
     pwm = 0.0;
+  }
   
   duty = pwm;
   int ton = 0;
@@ -524,7 +530,7 @@ int main(void)
   set_user2_led(false);
   
   // initialize pwm to 50% duty cycle (doesn't start pwm)
-  init_pwm(0.85);
+  init_pwm(0.95);
   start_pwm();
   
   // Print boot message

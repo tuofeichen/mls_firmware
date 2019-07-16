@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\settings\secondary_scr_test.secondary_scr_test.general.xcl" --backend -f "D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\settings\secondary_scr_test.secondary_scr_test.driver.xcl" 
+"E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\mls_firmware\secondary_pulse_test\EWARM\settings\secondary_scr_test.secondary_scr_test.general.xcl" --backend -f "D:\mls_firmware\secondary_pulse_test\EWARM\settings\secondary_scr_test.secondary_scr_test.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\settings\secondary_scr_test.secondary_scr_test.general.xcl" "--debug_file=%~1" --backend -f "D:\mls_firmware-master\mls_firmware-master\secondary_pulse_test\EWARM\settings\secondary_scr_test.secondary_scr_test.driver.xcl" 
+"E:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "D:\mls_firmware\secondary_pulse_test\EWARM\settings\secondary_scr_test.secondary_scr_test.general.xcl" "--debug_file=%~1" --backend -f "D:\mls_firmware\secondary_pulse_test\EWARM\settings\secondary_scr_test.secondary_scr_test.driver.xcl" 
 
 @echo off 
 :end
