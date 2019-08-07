@@ -87,7 +87,7 @@ int init = 0 ;
 int cmd_cnt = 0; // refresh count for print to debug terminal
   
 int td =  10;  // dead time for switch transitions
-int tcomm = 10;  // commutation period for leakage inductance
+int tcomm = 0;  // commutation period for leakage inductance
 int period = PWM_PERIOD;
 int new_pwm = 0;
 uint32_t duty_ul;
@@ -432,7 +432,7 @@ void set_pwm(float pwm) {
   
   if (pwm >= 1.0)
   {
-    pwm = 0.95;
+    pwm = 0.97;
   }
   else if (pwm<=0.0)
   {
@@ -530,7 +530,7 @@ int main(void)
   set_user2_led(false);
   
   // initialize pwm to 50% duty cycle (doesn't start pwm)
-  init_pwm(0.95);
+  init_pwm(0.99);
   start_pwm();
   
   // Print boot message

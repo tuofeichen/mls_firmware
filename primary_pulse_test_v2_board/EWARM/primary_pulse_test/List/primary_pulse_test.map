@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ELF Linker V8.20.2.14835/W32 for ARM                13/Jul/2019  11:49:52
+# IAR ELF Linker V8.20.2.14835/W32 for ARM                07/Aug/2019  11:15:01
 # Copyright 2007-2017 IAR Systems AB.
 #
 #    Output file  =  
@@ -8,7 +8,7 @@
 #    Map file     =  
 #        D:\mls_firmware\primary_pulse_test_v2_board\EWARM\primary_pulse_test\List\primary_pulse_test.map
 #    Command line =  
-#        -f C:\Users\FRANCI~1\AppData\Local\Temp\EWF5CD.tmp
+#        -f C:\Users\FRANCI~1\AppData\Local\Temp\EW14C8.tmp
 #        (D:\mls_firmware\primary_pulse_test_v2_board\EWARM\primary_pulse_test\Obj\main.o
 #        D:\mls_firmware\primary_pulse_test_v2_board\EWARM\primary_pulse_test\Obj\startup_stm32f373xc.o
 #        D:\mls_firmware\primary_pulse_test_v2_board\EWARM\primary_pulse_test\Obj\stm32f3xx_hal.o
@@ -76,7 +76,7 @@ initialize by copy { rw };
   .intvec            ro code  0x08000000   0x188  startup_stm32f373xc.o [1]
                             - 0x08000188   0x188
 
-"P1":                                     0x4447
+"P1":                                     0x4443
   .text              ro code  0x08000188   0xf96  xprintffull.o [3]
   .text              ro code  0x0800111e    0x1e  xencoding_8859_1.o [3]
   .text              ro code  0x0800113c    0x78  xlocale_c.o [3]
@@ -207,8 +207,8 @@ initialize by copy { rw };
   .text              ro code  0x0800456a     0x4  startup_stm32f373xc.o [1]
   .rodata            const    0x0800456e     0x0  zero_init3.o [5]
   .rodata            const    0x0800456e     0x0  packbits_init_single.o [5]
-  Initializer bytes  const    0x0800456e    0x61  <for P2-1>
-                            - 0x080045cf  0x4447
+  Initializer bytes  const    0x0800456e    0x5d  <for P2-1>
+                            - 0x080045cb  0x4443
 
 "P2", part 1 of 3:                          0xe8
   P2-1                        0x20000000    0xe8  <Init block>
@@ -247,8 +247,8 @@ Zero (__iar_zero_init3)
           0x200000e8  0x3b8
 
 Copy/packbits (__iar_packbits_init_single3)
-    1 source range, total size 0x61 (41% of destination):
-          0x0800456e   0x61
+    1 source range, total size 0x5d (40% of destination):
+          0x0800456e   0x5d
     1 destination range, total size 0xe8:
           0x20000000   0xe8
 
@@ -261,7 +261,7 @@ Copy/packbits (__iar_packbits_init_single3)
     Module                   ro code  ro data  rw data
     ------                   -------  -------  -------
 D:\mls_firmware\primary_pulse_test_v2_board\EWARM\primary_pulse_test\Obj: [1]
-    main.o                     1 476       41    1 044
+    main.o                     1 476       40    1 044
     startup_stm32f373xc.o        636
     stm32f3xx_hal.o              104                 4
     stm32f3xx_hal_cortex.o       230
@@ -275,9 +275,9 @@ D:\mls_firmware\primary_pulse_test_v2_board\EWARM\primary_pulse_test\Obj: [1]
     stm32f3xx_hal_uart.o       1 974
     stm32f3xx_hal_uart_ex.o        2
     stm32f3xx_it.o               100
-    system_stm32f3xx.o           124       10        4
+    system_stm32f3xx.o           124        9        4
     --------------------------------------------------
-    Total:                     9 628       51    1 052
+    Total:                     9 628       49    1 052
 
 command line: [2]
     --------------------------------------------------
@@ -291,12 +291,12 @@ dl7M_tlf.a: [3]
     strncat.o                     40
     xencoding_8859_1.o            30
     xfail_s.o                     68                 4
-    xlocale_c.o                  120       60      128
+    xlocale_c.o                  120       58      128
     xmbcurmax.o                   10
     xprintffull.o              3 990
     xsprout.o                     10
     --------------------------------------------------
-    Total:                     4 346       60      132
+    Total:                     4 346       58      132
 
 m7M_tls.a: [4]
     DblAdd.o                     376
@@ -342,7 +342,7 @@ shb_l.a: [6]
     Gaps                          40        2
     Linker created                         32    1 024
 ------------------------------------------------------
-    Grand Total:              17 726      145    2 208
+    Grand Total:              17 726      141    2 208
 
 
 *******************************************************************************
@@ -433,7 +433,7 @@ HAL_UART_TxCpltCallback
                         0x08002bc7   0x6e  Code  Gb  main.o [1]
 HardFault_Handler       0x080042d7    0x2  Code  Gb  stm32f3xx_it.o [1]
 LoadInt                 0x08000377   0x7a  Code  Lc  xprintffull.o [3]
-MX_TIM2_Init            0x08002ffd   0x9e  Code  Lc  main.o [1]
+MX_TIM2_Init            0x08002ff9   0x9e  Code  Lc  main.o [1]
 MemManage_Handler       0x080042d9    0x2  Code  Gb  stm32f3xx_it.o [1]
 NMI_Handler             0x080042d5    0x2  Code  Gb  stm32f3xx_it.o [1]
 NVIC_SetPriority        0x080035ed   0x1e  Code  Lc  stm32f3xx_hal_cortex.o [1]
@@ -442,7 +442,7 @@ Region$$Table$$Base     0x0800440c          --   Gb  - Linker created -
 Region$$Table$$Limit    0x0800442c          --   Gb  - Linker created -
 SVC_Handler             0x080042df    0x2  Code  Gb  stm32f3xx_it.o [1]
 SysTick_Handler         0x080042e5    0xe  Code  Gb  stm32f3xx_it.o [1]
-SystemClock_Config      0x08002f77   0x86  Code  Gb  main.o [1]
+SystemClock_Config      0x08002f73   0x86  Code  Gb  main.o [1]
 SystemCoreClock         0x20000064    0x4  Data  Gb  system_stm32f3xx.o [1]
 SystemInit              0x08004259   0x52  Code  Gb  system_stm32f3xx.o [1]
 TIM6_DAC1_IRQHandler    0x08004317    0x6  Code  Gb  stm32f3xx_it.o [1]
@@ -606,7 +606,7 @@ uwTick                  0x20000498    0x4  Data  Gb  stm32f3xx_hal.o [1]
 [6] = shb_l.a
 
   17 726 bytes of readonly  code memory
-     145 bytes of readonly  data memory
+     141 bytes of readonly  data memory
    2 208 bytes of readwrite data memory
 
 Errors: none

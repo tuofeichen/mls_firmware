@@ -567,19 +567,19 @@ int main(void)
 
     
     //control law code. 
-     
-      if ((monitor_cnt%1000000) == 0)
-      {
-          dcv = 0.8*dcv + 0.2*(*adc_outv); 
-          v_real = ((float)dcv/4096.0*3.3 - 1.5)*501;  // conversion for voltage in V
+      dcv = *adc_outv; //0.8*dcv + 0.2*(*adc_outv); 
+      v_real = ((float)dcv/4096.0*3.3 - 1.5)*501;  // conversion for voltage in V
 
-          dci = 0.8*dci + 0.2*(*adc_outi); 
-          i_real = ((float)dci/4096.0*3.3 - 3.3*0.5)/(0.066);  // conversion for current in A
-          sprintf(monitor_buf,"ADC Output Voltage is %d,%4.2f Currnet is %d,%4.2f\n\r",dcv,v_real,dci,i_real);
-          print_debug(monitor_buf);
-          
-          
-          monitor_cnt = 1; 
+      dci = *adc_outi; // 0.9*dci + 0.1*(*adc_outi); 
+      i_real = ((float)dci/4096.0*3.3 - 3.3*0.5)/(0.066);  // conversion for current in A
+      
+        
+      if ((monitor_cnt%5000) == 0)
+      {
+         //sprintf(monitor_buf,"ADC Output Voltage is %4.2f Current is %4.2f\n\r",v_real,i_real);
+         sprintf(monitor_buf,"%d,%d\n\r",dcv,dci);  
+         print_debug(monitor_buf);        
+         monitor_cnt = 1; 
       }     
       else
         monitor_cnt ++; 
