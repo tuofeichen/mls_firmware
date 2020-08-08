@@ -86,7 +86,8 @@ __IO uint16_t pulse_length = 1;
 int init = 0 ;
 int cmd_cnt = 0; // refresh count for print to debug terminal
   
-int td =  10;  // dead time for switch transitions
+int td1 =  10;  // dead time for switch transitions
+int td2 =  10; 
 int tcomm = 0;  // commutation period for leakage inductance
 int period = PWM_PERIOD;
 int new_pwm = 0;
@@ -374,15 +375,15 @@ void stop_pwm() {
 
 void init_pwm(float pwm) {
   // Configure and start PWM
-  int ttot = period - 4 * td;
-  int ton = (uint32_t)(ttot / 2.0 * pwm + tcomm);
+  int ttot = period - 2 * (td1+td2);
+  int ton = (uint32_t)(ttot / 2.0 * pwm);
   int toff = (uint32_t)((ttot - 2*ton)/2.0);
   
   
-  duty_ul = (uint32_t)(ton/2.0) + td;
+  duty_ul = (uint32_t)(ton/2.0) + td1;
   duty_ll = (uint32_t)(ton/2.0);
-  duty_ur = (uint32_t)(ton/2.0 + toff) + td; 
-  duty_lr = (uint32_t)(ton/2.0 + toff) + 2*td;
+  duty_ur = (uint32_t)(ton/2.0 + toff)+ td1; 
+  duty_lr = (uint32_t)(ton/2.0 + toff) + td1+td2;
   
   // Timer setup
   TIM_OC_InitTypeDef sConfigOC;
@@ -430,7 +431,7 @@ void init_pwm(float pwm) {
 
 void set_pwm(float pwm) {
   
-  if (pwm >= 1.0)
+  if (pwm > 1.0)
   {
     pwm = 0.97;
   }
@@ -442,7 +443,7 @@ void set_pwm(float pwm) {
   duty = pwm;
   int ton = 0;
   // Configure and start PWM
-  int ttot = period - 4 * td;
+  int ttot = period - 2 * (td1+td2);
   if (pwm > 0.0)
     ton = (uint32_t)(ttot / 2.0 * duty + tcomm);
   
@@ -452,10 +453,10 @@ void set_pwm(float pwm) {
   // wait for last pwm value to be updated
 //  while(new_pwm);
   
-  duty_ul = (uint32_t)(ton/2.0) + td;
+  duty_ul = (uint32_t)(ton/2.0) + td1;
   duty_ll = (uint32_t)(ton/2.0);
-  duty_ur = (uint32_t)(ton/2.0 + toff) + td; 
-  duty_lr = (uint32_t)(ton/2.0 + toff) + 2*td;
+  duty_ur = (uint32_t)(ton/2.0 + toff) + td1; 
+  duty_lr = (uint32_t)(ton/2.0 + toff) + td1+td2;
 
   htim2.Instance->CCR1 = duty_lr;
   htim2.Instance->CCR2 = duty_ul;
@@ -530,7 +531,7 @@ int main(void)
   set_user2_led(false);
   
   // initialize pwm to 50% duty cycle (doesn't start pwm)
-  init_pwm(0.99);
+  init_pwm(1);
   start_pwm();
   
   // Print boot message
@@ -543,8 +544,6 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
-
   while (1)
   {
     
