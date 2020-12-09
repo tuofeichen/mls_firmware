@@ -21,7 +21,7 @@
 #include "tim.h"
 
 /* USER CODE BEGIN 0 */
-
+short gPhase =  0; 
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim1;
@@ -77,6 +77,12 @@ void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = PWM_PERIOD;
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
   sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
   sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
   sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
@@ -102,9 +108,9 @@ void MX_TIM3_Init(void)
   TIM_MasterConfigTypeDef sMasterConfig = {0};
 
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 599;
+  htim3.Init.Prescaler = 589;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 59;
+  htim3.Init.Period = 9;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
@@ -170,9 +176,11 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timHandle)
     PE8     ------> TIM1_CH1N
     PE9     ------> TIM1_CH1
     PE10     ------> TIM1_CH2N
-    PE11     ------> TIM1_CH2 
+    PE11     ------> TIM1_CH2
+    PE13     ------> TIM1_CH3 
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11;
+    GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11 
+                          |GPIO_PIN_13;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -217,26 +225,63 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 } 
 
 /* USER CODE BEGIN 1 */
-void change_phase_shift(uint16_t phase)
+void change_phase_shift(short phase)
+{    
+
+     htim1.Instance->CCR1 = phase; 
+     htim1.Instance->CCR2 = PWM_PERIOD-phase; 
+   
+//    while(htim1.Instance->CNT>10); 
+//    if (phase >=0)
+//    {
+//      htim1.Instance->CCR1 = HALF_PWM_PERIOD;
+//      htim1.Instance->CCR2 = HALF_PWM_PERIOD;
+//      htim1.Instance->CCR3 = HALF_PWM_PERIOD+phase;
+//      htim1.Instance->CCR4 = HALF_PWM_PERIOD-phase;
+//    }
+//    else
+//    {
+//      htim1.Instance->CCR1 = HALF_PWM_PERIOD+phase;
+//      htim1.Instance->CCR2 = HALF_PWM_PERIOD-phase;
+//      htim1.Instance->CCR3 = HALF_PWM_PERIOD;
+//      htim1.Instance->CCR4 = HALF_PWM_PERIOD;
+//    }
+
+}
+
+void change_duty_cycle(short duty)
+
 {
-   htim1.Instance->CCR1 = phase; 
-   htim1.Instance->CCR2 = PWM_PERIOD-phase; 
+    //while(htim1.Instance->CNT>duty); 
+    if (duty>0)
+    {
+      htim1.Instance->CCR3 = duty;
+      HAL_GPIO_WritePin(GPIOE, GPIO_PIN_14, GPIO_PIN_RESET);  
+      //htim1.Instance->CCR4 = duty;
+    }
+    else 
+    {
+      htim1.Instance->CCR3 = PWM_PERIOD+duty;
+      HAL_GPIO_WritePin(GPIOE, GPIO_PIN_14, GPIO_PIN_SET);  
+      //htim1.Instance->CCR4 = -duty;
+    }
+    
 }
 
 void start_pwm() 
 {
   /* Start channel 1 */
-  if (HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1) != HAL_OK)
-  {
-    /* PWM Generation Error */
-    Error_Handler();
-  }
-  
-  if (HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1) != HAL_OK)
-  {
-    /* PWM Generation Error */
-    Error_Handler();
-  }
+    if (HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1) != HAL_OK)
+    {
+      /* PWM Generation Error */
+      Error_Handler();
+    }
+    
+    if (HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1) != HAL_OK)
+    {
+      /* PWM Generation Error */
+      Error_Handler();
+    }
   /* Start channel 2 */
   if (HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2) != HAL_OK)
   {
@@ -257,6 +302,21 @@ void start_pwm()
     Error_Handler();
   }
 
+  /* Start channel 4 */
+  if (HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4) != HAL_OK)
+  {
+    /* PWM generation Error */
+    Error_Handler();
+  }
+//  if (HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3) != HAL_OK)
+//  {
+//    /* PWM Generation Error */
+//    Error_Handler();
+//  }
+    htim1.Instance->CCR1 = PWM_PERIOD/2;
+    htim1.Instance->CCR2 = PWM_PERIOD/2;
+    htim1.Instance->CCR3 = 0.7*PWM_PERIOD;
+//   htim1.Instance->CCR4 = 0.7*PWM_PERIOD;
 }
 /* USER CODE END 1 */
 

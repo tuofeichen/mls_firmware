@@ -37,11 +37,13 @@ extern __IO uint16_t adc1_buffer[3];
 extern __IO uint16_t *adc_val1;
 extern __IO uint16_t *adc_val2;
 extern __IO uint16_t *adc_val3;
-// Controller Global 
-extern float voltErrorInt; 
-extern short Kp ; 
-extern short Ki;
 extern short voltCmd; 
+extern short currCmd; 
+extern char  voltUpdate; 
+// Controller Global 
+//extern float voltErrorInt; 
+//extern short Kp ; 
+//extern short Ki;
 /* USER CODE END Private defines */
 
 void MX_ADC1_Init(void);

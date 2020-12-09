@@ -4,11 +4,6 @@ D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\dma.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\gpio.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\main.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\printf.pbi
-D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_msp.pbi
-D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_it.pbi
-D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\tim.pbi
-D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\usart.pbi
-D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\system_stm32f3xx.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_adc.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_adc_ex.pbi
@@ -20,6 +15,7 @@ D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_flash_ex.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_gpio.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_i2c.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_i2c_ex.pbi
+D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_msp.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_pwr.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_pwr_ex.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_rcc.pbi
@@ -28,3 +24,7 @@ D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_tim.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_tim_ex.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_uart.pbi
 D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_hal_uart_ex.pbi
+D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\stm32f3xx_it.pbi
+D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\system_stm32f3xx.pbi
+D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\tim.pbi
+D:\mls_firmware\DAB_Inverter\EWARM\DAB_Inverter\Obj\usart.pbi

@@ -26,12 +26,12 @@ __IO uint16_t adc1_buffer[3];
 __IO uint16_t *adc_val1 = &adc1_buffer[0];
 __IO uint16_t *adc_val2 = &adc1_buffer[1];
 __IO uint16_t *adc_val3 = &adc1_buffer[2];
- float voltErrorInt = 0.0f; 
- short Kp = 3 ;
- short Ki = 4000;
- short voltCmd = 620; 
- short phiCmdTick = 0; 
- long int  monitorCnt = 0; 
+short voltCmd  = 0; 
+short currCmd = 0; 
+short K11 = 0; 
+short K22 = 0; 
+
+char voltUpdate = 0; 
 /* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc1;
@@ -186,43 +186,8 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 // dummy code for the ADC completion callback
 void   HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
-   
-     if (*adc_val1 == 0) // wait for init
-      return; 
-    
-    short voltOutput = *adc_val1 - 2048; 
-    short voltError  = voltCmd - voltOutput; 
-    voltErrorInt = (voltErrorInt + voltError/(60000.0f)); 
+     voltUpdate = 1; 
 
-    // clamp integral error (anti windup)
-    if (voltErrorInt>0.1f)
-    {   
-      voltErrorInt = 0.1f;
-    }
-    else if (voltErrorInt<-0.1f)
-    {
-      voltErrorInt = -0.1f;
-    }
-   
-    phiCmdTick = Kp*voltError + Ki*voltErrorInt;
-
-    if (phiCmdTick>120)
-      phiCmdTick=120;
-    else if (phiCmdTick<0)
-      phiCmdTick=0;
-    
-    change_phase_shift(phiCmdTick); 
-        
-     if ((monitorCnt%400000)==0)
-     {
-       char monitorBuf[40];
-       snprintf(monitorBuf,40,"phi: %d, err_int %5.4f, Vout: %d \r\n\n",phiCmdTick,voltErrorInt,voltOutput);  
-       print_debug(monitorBuf);    
-       monitorCnt = 1; 
-        
-     } 
-      monitorCnt++; 
-      
 }
 
 

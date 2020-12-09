@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include "usart.h"
 #include "adc.h"
+#include "tim.h"
 #include "sine_table.h"
 /* USER CODE END Includes */
 
@@ -271,17 +272,19 @@ void TIM3_IRQHandler(void)
   /* USER CODE END TIM3_IRQn 0 */
   HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */
-  
-  if (sineTableCnt < 100)
+
+   
+  if (sineTableCnt < 200)
     {
-      voltCmd = sineTable[sineTableCnt]/2; 
-      sineTableCnt+=2; 
+//      HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_0);
+      // currCmd = sineTable[sineTableCnt]; 
+      sineTableCnt++; 
     }
    else
     {
       sineTableCnt = 0; 
     }
-   HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_0);
+ 
   
   /* USER CODE BEGIN TIM3_IRQn 0 */
 
